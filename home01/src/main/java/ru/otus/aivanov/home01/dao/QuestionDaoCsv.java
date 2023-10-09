@@ -27,7 +27,7 @@ public class QuestionDaoCsv implements QuestionDao {
     }
 
     public List<Question> findAll() throws QuestionReadException {
-          try (BufferedReader reader = getFileFromResourceAsStream(path);) {
+          try (BufferedReader reader = getFileFromResourceAsStream(path)) {
               List<QuestionDto> questionDto = fillQuestionDtoFromCsvFile(reader);
               return convertFromQuestionDtoToQuestion(questionDto);
            } catch (IOException e) {
@@ -36,7 +36,7 @@ public class QuestionDaoCsv implements QuestionDao {
     }
 
     private static List<Question> convertFromQuestionDtoToQuestion(List<QuestionDto> questionDto) {
-        List<Question> question = new ArrayList<Question>();
+        List<Question> question = new ArrayList<>();
         questionDto.forEach(quest -> question.add(quest.toDomainObject()));
         return question;
     }
