@@ -23,8 +23,4 @@ public class IOServiceStream implements IOService {
         printStream.println(colorLine.isEmpty() ? CONSOLE_TEXT_COLOR_RESET : colorLine + s);
     }
 
-    @Override
-    public void printFormattedLine(String s, String colorLine, Object... args) {
-        printStream.printf(colorLine.isEmpty() ? CONSOLE_TEXT_COLOR_RESET : colorLine + s + "%n", args);
-    }
 }

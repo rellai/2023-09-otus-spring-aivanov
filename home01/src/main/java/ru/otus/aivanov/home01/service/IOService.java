@@ -5,5 +5,4 @@ public interface IOService {
 
     void printColoredLine(String s, String colorLine);
 
-    void printFormattedLine(String s, String colorLine, Object ...args);
 }
