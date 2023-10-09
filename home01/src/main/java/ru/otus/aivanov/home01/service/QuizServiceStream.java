@@ -23,11 +23,9 @@ public class QuizServiceStream implements QuizService {
     }
 
     @Override
-    public Question findAll() {
+    public void findAll() {
         List<Question> questions =  dao.findAll();
         printTest(questions);
-
-        return null;
     }
 
     private void printTest(List<Question> questions) {
