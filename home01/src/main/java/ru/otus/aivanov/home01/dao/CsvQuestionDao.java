@@ -23,7 +23,7 @@ public class CsvQuestionDao implements QuestionDao {
 
     }
 
-    private static BufferedReader getFileFromResourceAsStream(String fileName) {
+    private BufferedReader getFileFromResourceAsStream(String fileName) {
         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(fileName);
         if (inputStream == null) {
             throw new IllegalArgumentException("File not Found " + fileName);
