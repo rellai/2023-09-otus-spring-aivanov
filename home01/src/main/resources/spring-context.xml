@@ -10,14 +10,15 @@
         <util:constant static-field="java.lang.System.out"/>
     </constructor-arg>
     </bean>
-    <bean id="QuizService" class="ru.otus.aivanov.home01.service.QuizServiceStream" >
+    <bean id="QuizService" class="ru.otus.aivanov.home01.service.QuizServiceImpl" >
         <constructor-arg index="0" ref="QuestionDaoCsv"/>
         <constructor-arg index="1" ref="IOService"/>
     </bean>
     <bean id="StarterService" class="ru.otus.aivanov.home01.service.StarterServiceTest" >
         <constructor-arg index="0" ref="QuizService"/>
+        <constructor-arg index="1" ref="IOService"/>
     </bean>
-    <bean id="QuestionDaoCsv" class="ru.otus.aivanov.home01.dao.QuestionDaoCsv" >
+    <bean id="QuestionDaoCsv" class="ru.otus.aivanov.home01.dao.CsvQuestionDao" >
        <constructor-arg index="0"  value="questions.csv"/>
     </bean>
 

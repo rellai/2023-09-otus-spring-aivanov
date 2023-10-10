@@ -10,13 +10,13 @@ import static ru.otus.aivanov.home01.utils.Const.CONSOLE_TEXT_COLOR_PURPLE;
 import static ru.otus.aivanov.home01.utils.Const.CONSOLE_TEXT_COLOR_RESET;
 import static ru.otus.aivanov.home01.utils.Const.CONSOLE_TEXT_COLOR_YELLOW;
 
-public class QuizServiceStream implements QuizService {
+public class QuizServiceImpl implements QuizService {
 
     private final QuestionDao dao;
 
     private final IOService ioService;
 
-    public QuizServiceStream(QuestionDao dao,  IOService ioService) {
+    public QuizServiceImpl(QuestionDao dao, IOService ioService) {
         this.dao = dao;
         this.ioService = ioService;
 
