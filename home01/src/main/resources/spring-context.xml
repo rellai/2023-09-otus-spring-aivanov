@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+    <bean id="IOService" class="ru.otus.aivanov.home01.service.IOServiceStream" >
+    <constructor-arg index="0">
+        <util:constant static-field="java.lang.System.out"/>
+    </constructor-arg>
+    </bean>
+    <bean id="QuizService" class="ru.otus.aivanov.home01.service.QuizServiceImpl" >
+        <constructor-arg index="0" ref="QuestionDaoCsv"/>
+        <constructor-arg index="1" ref="IOService"/>
+    </bean>
+    <bean id="StarterService" class="ru.otus.aivanov.home01.service.StarterServiceTest" >
+        <constructor-arg index="0" ref="QuizService"/>
+        <constructor-arg index="1" ref="IOService"/>
+    </bean>
+    <bean id="QuestionDaoCsv" class="ru.otus.aivanov.home01.dao.CsvQuestionDao" >
+       <constructor-arg index="0"  value="questions.csv"/>
+    </bean>
+
+</beans>
