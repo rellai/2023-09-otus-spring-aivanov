@@ -29,12 +29,6 @@ public class QuizServiceImpl implements QuizService {
 
     }
 
-    @Override
-    public void findAll() {
-        List<Question> questions =  questionDao.findAll();
-        printTest(questions);
-    }
-
     private void printTest(List<Question> questions) {
         AtomicInteger questionNumber = new AtomicInteger();
         questions.forEach(question -> {

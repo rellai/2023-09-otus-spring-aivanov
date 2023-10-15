@@ -68,10 +68,5 @@ public class StreamIOService implements IOService {
         throw new IllegalArgumentException("Error during reading int value");
     }
 
-    @Override
-    public int readIntForRangeWithPrompt(int min, int max, String prompt, String color, String errorMessage) {
-        printColoredLine(prompt, color);
-        return readIntForRange(min, max, errorMessage);
-    }
 
 }

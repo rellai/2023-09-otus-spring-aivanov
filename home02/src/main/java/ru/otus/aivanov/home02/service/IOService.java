@@ -5,7 +5,7 @@ public interface IOService {
 
     void printColoredLine(String s, String colorLine);
 
-    public void printFormattedColoredLine(String s, String colorLine, Object... args);
+    void printFormattedColoredLine(String s, String colorLine, Object... args);
 
     String readString();
 
@@ -13,5 +13,4 @@ public interface IOService {
 
     int readIntForRange(int min, int max, String errorMessage);
 
-    int readIntForRangeWithPrompt(int min, int max, String prompt, String color, String errorMessage);
 }
