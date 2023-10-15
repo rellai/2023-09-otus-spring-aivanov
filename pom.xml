@@ -12,5 +12,6 @@
 
     <modules>
         <module>home01</module>
+        <module>home02</module>
     </modules>
 </project>

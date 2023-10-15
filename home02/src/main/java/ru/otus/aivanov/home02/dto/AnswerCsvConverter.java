@@ -1,7 +1,7 @@
-package ru.otus.aivanov.home01.dto;
+package ru.otus.aivanov.home02.dto;
 
 import com.opencsv.bean.AbstractCsvConverter;
-import ru.otus.aivanov.home01.domain.Answer;
+import ru.otus.aivanov.home02.domain.Answer;
 
 public class AnswerCsvConverter extends AbstractCsvConverter {
 
