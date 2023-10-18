@@ -2,23 +2,19 @@ package ru.otus.aivanov.home02.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import ru.otus.aivanov.home02.Main;
-import ru.otus.aivanov.home02.service.StarterService;
+import ru.otus.aivanov.home02.config.TestFileNameProvider;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-@Configuration
-@PropertySource("classpath:applicationUnitTest.properties")
+
 @DisplayName("Test for class QuestionDaoCsv")
 class CsvQuestionDaoTest {
 
     @Test
-    @DisplayName("Test for method findAll")
-    void testFindAll() {
-        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        StarterService starter = context.getBean(StarterService.class);
-        starter.startExam();
-        context.close();
+    void findAll() {
+        var fileNameProvider = mock(TestFileNameProvider.class);
+        when(fileNameProvider.getTestFileName()).thenReturn("questionsUnitTest.csv");
+        var csvQuestionDao = new CsvQuestionDao(fileNameProvider);
+        assertEquals(3, csvQuestionDao.findAll().size(), "expected 3 returned returned another number");
     }
 }
