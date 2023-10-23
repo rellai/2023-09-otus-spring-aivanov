@@ -2,7 +2,6 @@ package ru.otus.aivanov.home01.dao;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.otus.aivanov.home01.exceptions.QuestionReadException;
 
 import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("Test for class QuestionDaoCsv")

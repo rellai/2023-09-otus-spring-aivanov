@@ -1,9 +1,9 @@
-package ru.otus.aivanov.home01.dto;
+package ru.otus.aivanov.home02.dto;
 
 import com.opencsv.bean.CsvBindAndSplitByPosition;
 import com.opencsv.bean.CsvBindByPosition;
-import ru.otus.aivanov.home01.domain.Answer;
-import ru.otus.aivanov.home01.domain.Question;
+import ru.otus.aivanov.home02.domain.Answer;
+import ru.otus.aivanov.home02.domain.Question;
 
 import java.util.ArrayList;
 import java.util.List;
