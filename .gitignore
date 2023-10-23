@@ -1,8 +1,8 @@
 target/
-!.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 dependency-reduced-pom.xml
+.mvn/
 
 ### IntelliJ IDEA ###
 .idea/

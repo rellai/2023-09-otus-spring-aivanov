@@ -13,5 +13,6 @@
     <modules>
         <module>home01</module>
         <module>home02</module>
+        <module>home03</module>
     </modules>
 </project>
