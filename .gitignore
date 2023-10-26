@@ -3,7 +3,6 @@ target/
 !**/src/test/**/target/
 dependency-reduced-pom.xml
 .mvn/
-.github/
 mvnw
 mvnw.cmd
 
