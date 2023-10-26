@@ -28,10 +28,10 @@ public class ResultServiceImpl implements ResultService {
                 testResult.getStudent().getFullName());
         ioService.printFormattedColoredLine("ResultService.answered.questions.count",
                 CONSOLE_TEXT_COLOR_RESET,
-                testResult.getAnsweredQuestions().size());
+                String.valueOf(testResult.getAnsweredQuestions().size()));
         ioService.printFormattedColoredLine("ResultService.right.answers.count",
                 CONSOLE_TEXT_COLOR_RESET,
-                testResult.getRightAnswersCount());
+                String.valueOf(testResult.getRightAnswersCount()));
 
         if (testResult.getRightAnswersCount() >= testConfig.getRightAnswersCountToPass()) {
             ioService.printLine("ResultService.passed.test");

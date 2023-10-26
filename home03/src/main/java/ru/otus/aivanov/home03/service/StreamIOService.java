@@ -42,7 +42,7 @@ public class StreamIOService implements IOService {
     }
 
     @Override
-    public void printFormattedColoredLine(String s, String colorLine, Object... args) {
+    public void printFormattedColoredLine(String s, String colorLine, String... args) {
         printStream.printf(colorLine.isEmpty() ?
                 CONSOLE_TEXT_COLOR_RESET + localizedMessage.getLocalizedMessage(s, args) + "\n"  :
                 colorLine + localizedMessage.getLocalizedMessage(s, args) + "\n");

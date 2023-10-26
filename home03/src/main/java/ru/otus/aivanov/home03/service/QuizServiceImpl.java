@@ -59,7 +59,7 @@ public class QuizServiceImpl implements QuizService {
 
 
     private void printQuestion(Question question, AtomicInteger questionNumber) {
-        ioService.printFormattedColoredLine("TestService.question", CONSOLE_TEXT_COLOR_PURPLE, questionNumber);
+        ioService.printFormattedColoredLine("TestService.question", CONSOLE_TEXT_COLOR_PURPLE, questionNumber.toString());
         ioService.printColoredLine("  " + question.text(), CONSOLE_TEXT_COLOR_RESET);
         ioService.printColoredLine("TestService.answer.the.questions.posible", CONSOLE_TEXT_COLOR_YELLOW);
     }

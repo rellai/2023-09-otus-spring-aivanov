@@ -5,7 +5,7 @@ public interface IOService {
 
     void printColoredLine(String s, String colorLine);
 
-    void printFormattedColoredLine(String s, String colorLine, Object... args);
+    void printFormattedColoredLine(String s, String colorLine, String... args);
 
     String readString();
 

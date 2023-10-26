@@ -1,31 +1,24 @@
 package ru.otus.aivanov.home03.service;
 
 import org.springframework.context.MessageSource;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
-import ru.otus.aivanov.home03.config.AppProps;
+import ru.otus.aivanov.home03.config.LocaleProvider;
 
 @Service
 public class LocalizedMessageImpl implements LocalizedMessage {
 
     private final MessageSource messageSource;
 
-    private final AppProps props;
+    private final LocaleProvider localeProvider;
 
-    public LocalizedMessageImpl(MessageSource messageSource, AppProps props) {
-        this.props = props;
+    public LocalizedMessageImpl(MessageSource messageSource, LocaleProvider localeProvider) {
+        this.localeProvider = localeProvider;
         this.messageSource = messageSource;
     }
 
     @Override
-    public String getLocalizedMessage(String stringForLocalize) {
-        return messageSource.getMessage(stringForLocalize, null, stringForLocalize, props.getLocale());
-    }
-
-
-    @Override
-    public String getLocalizedMessage(String stringForLocalize, @Nullable Object[] args) {
-        return messageSource.getMessage(stringForLocalize, args, stringForLocalize , props.getLocale());
+    public String getLocalizedMessage(String stringForLocalize, String... args) {
+        return messageSource.getMessage(stringForLocalize, args, stringForLocalize , localeProvider.getLocale());
     }
 
 }

@@ -1,13 +1,13 @@
 package ru.otus.aivanov.home03.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 import java.util.Locale;
 import java.util.Map;
 
+
 @ConfigurationProperties(prefix = "test")
-public class AppProps {
+public class AppProps implements TestConfig, TestFileNameProvider, LocaleProvider{
 
     private int rightAnswersCountToPass;
 
@@ -17,7 +17,7 @@ public class AppProps {
 
     private String localeBundlePath;
 
-    @ConstructorBinding
+
     public AppProps(Locale locale,
                     Map<String, String> fileNameByLocaleTag,
                     int rightAnswersCountToPass,
@@ -29,10 +29,7 @@ public class AppProps {
 
     }
 
-    public Locale getLocale() {
-        return locale;
-    }
-
+    @Override
     public int getRightAnswersCountToPass() {
         return rightAnswersCountToPass;
     }
@@ -43,5 +40,16 @@ public class AppProps {
 
     public String getLocaleBundlePath() {
         return localeBundlePath;
+    }
+
+    @Override
+    public String getTestFileName() {
+        return getFileNameByLocaleTag().get(locale.toLanguageTag());
+    }
+
+
+    @Override
+    public Locale getLocale() {
+        return locale;
     }
 }
