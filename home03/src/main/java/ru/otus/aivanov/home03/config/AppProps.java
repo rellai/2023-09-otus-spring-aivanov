@@ -7,7 +7,7 @@ import java.util.Map;
 
 
 @ConfigurationProperties(prefix = "test")
-public class AppProps implements TestConfig, TestFileNameProvider, LocaleProvider{
+public class AppProps implements TestConfig, TestFileNameProvider, LocaleProvider {
 
     private int rightAnswersCountToPass;
 
