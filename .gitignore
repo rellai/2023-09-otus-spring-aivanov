@@ -3,6 +3,7 @@ target/
 !**/src/test/**/target/
 dependency-reduced-pom.xml
 .mvn/
+.github/
 
 ### IntelliJ IDEA ###
 .idea/
@@ -34,4 +35,3 @@ build/
 
 ### Mac OS ###
 .DS_Store
-/.idea/
