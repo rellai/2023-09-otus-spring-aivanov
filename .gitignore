@@ -3,7 +3,7 @@ target/
 !**/src/test/**/target/
 dependency-reduced-pom.xml
 .mvn/
-*/.github/
+.github/
 
 ### IntelliJ IDEA ###
 .idea/
