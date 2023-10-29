@@ -35,7 +35,7 @@ public class QuizServiceImpl implements QuizService {
             AtomicReference<Integer> answerNumber = new AtomicReference<>(0);
             printQuestion(question, questionNumber);
             printAnswersForQuestion(question, answerNumber);
-            ioService.printLine("");
+            ioService.printLine("StarterService.noline");
         });
     }
 

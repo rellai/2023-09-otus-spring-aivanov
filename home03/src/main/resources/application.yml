@@ -1,0 +1,11 @@
+spring:
+  messages:
+    baseName: i18n/messages
+    encoding: UTF-8
+    fallbackToSystemLocale: false
+test:
+  rightAnswersCountToPass: 3
+  locale: ru_RU
+  fileNameByLocaleTag:
+    ru-RU: questions_ru.csv
+    en-US: questions.csv
