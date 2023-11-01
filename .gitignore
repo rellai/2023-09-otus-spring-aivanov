@@ -5,6 +5,7 @@ dependency-reduced-pom.xml
 .mvn/
 mvnw
 mvnw.cmd
+*.log
 
 ### IntelliJ IDEA ###
 .idea/

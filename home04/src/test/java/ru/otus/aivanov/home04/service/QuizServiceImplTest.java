@@ -1,10 +1,13 @@
 package ru.otus.aivanov.home04.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-import ru.otus.aivanov.home04.config.TestFileNameProvider;
-import ru.otus.aivanov.home04.dao.CsvQuestionDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import ru.otus.aivanov.home04.config.AppProps;
 import ru.otus.aivanov.home04.domain.Student;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,24 +15,31 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @DisplayName("Test formation service")
+@EnableConfigurationProperties(value = AppProps.class)
+@SpringBootTest
 class QuizServiceImplTest {
 
-    @Test
-    void executeTestFor() {
+    @MockBean
+    IOService ioService;
 
-        var fileNameProvider = mock(TestFileNameProvider.class);
-        when(fileNameProvider.getTestFileName()).thenReturn("questionsUnitTest.csv");
+    @MockBean
+    Student student;
 
-        var ioService = Mockito.mock(IOService.class);
-        var student = mock(Student.class);
+    @Autowired
+    QuizService quizService;
+
+    @BeforeEach
+    void setUp() {
         given(ioService.readIntForRange(anyInt(), anyInt(), anyString() ) )
                 .willReturn(1);
         doNothing().when(ioService).printLine(anyString());
         doNothing().when(ioService).printFormattedColoredLine(anyString(),anyString());
+    }
 
-        var questionDao = Mockito.spy(new CsvQuestionDao(fileNameProvider));
-        var quizService = spy(new QuizServiceImpl(questionDao, ioService));
+    @Test
+    void RightAnswersCount() {
 
-        assertEquals(quizService.executeTestFor(student).getRightAnswersCount() , 2);
+             quizService.executeTestFor(student);
+        assertEquals(quizService.getTestResult().getRightAnswersCount() , 2);
     }
 }
