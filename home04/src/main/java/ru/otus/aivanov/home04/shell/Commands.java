@@ -37,7 +37,9 @@ public class Commands {
     }
 
     private Availability isAutorized() {
-        return studentService.isDeterminated()?Availability.available():Availability.unavailable(localizedMessage.getLocalizedMessage("ShellCommand.PleaseAutorize"));
+        return studentService.isDeterminated() ?
+                Availability.available() :
+                Availability.unavailable(localizedMessage.getLocalizedMessage("ShellCommand.PleaseAutorize"));
     }
 
     private Availability isTested() {
