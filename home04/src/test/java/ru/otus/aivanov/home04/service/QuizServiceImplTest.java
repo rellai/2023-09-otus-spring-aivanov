@@ -38,8 +38,7 @@ class QuizServiceImplTest {
 
     @Test
     void RightAnswersCount() {
-
-             quizService.executeTestFor(student);
-        assertEquals(quizService.getTestResult().getRightAnswersCount() , 2);
+             var testResult = quizService.executeTestFor(student);
+        assertEquals(testResult.getRightAnswersCount() , 2);
     }
 }
