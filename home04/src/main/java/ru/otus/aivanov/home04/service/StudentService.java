@@ -4,9 +4,6 @@ import ru.otus.aivanov.home04.domain.Student;
 
 public interface StudentService {
 
-    void determineCurrentStudent();
+    Student determineCurrentStudent();
 
-    boolean isDeterminated();
-
-    Student getStudent();
 }

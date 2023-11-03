@@ -8,8 +8,6 @@ public class StudentServiceImpl implements StudentService {
 
     private final IOService ioService;
 
-    private Student student;
-
 
     public StudentServiceImpl(IOService ioService, LocalizedMessage localizedMessage) {
         this.ioService = ioService;
@@ -17,20 +15,10 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
-    public void determineCurrentStudent() {
+    public Student determineCurrentStudent() {
         var firstName = ioService.readStringWithPrompt("StudentService.input.first.name");
         var lastName = ioService.readStringWithPrompt("StudentService.input.last.name");
-        student = new Student(firstName, lastName);
+        return new Student(firstName, lastName);
     }
 
-
-    @Override
-    public boolean isDeterminated() {
-        return (student != null);
-    }
-
-    @Override
-    public Student getStudent() {
-        return student;
-    }
 }

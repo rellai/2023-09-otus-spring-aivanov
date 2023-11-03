@@ -4,6 +4,8 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
+import ru.otus.aivanov.home04.domain.Student;
+import ru.otus.aivanov.home04.domain.TestResult;
 import ru.otus.aivanov.home04.service.LocalizedMessage;
 import ru.otus.aivanov.home04.service.QuizService;
 import ru.otus.aivanov.home04.service.ResultService;
@@ -20,6 +22,9 @@ public class Commands {
 
     private final LocalizedMessage localizedMessage;
 
+    private TestResult testResult;
+
+    private Student student;
 
     public Commands(QuizService quizService, StudentService studentService,
                     ResultService resultService, LocalizedMessage localizedMessage) {
@@ -33,19 +38,19 @@ public class Commands {
     @ShellMethodAvailability("isAutorized")
     public void startTesting() {
 
-        quizService.executeTestFor(studentService.getStudent());
+        testResult = quizService.executeTestFor(student);
     }
 
     private Availability isAutorized() {
-        return studentService.isDeterminated() ?
+        return student != null ?
                 Availability.available() :
                 Availability.unavailable(localizedMessage.getLocalizedMessage("ShellCommand.PleaseAutorize"));
     }
 
     private Availability isTested() {
-        if (studentService.getStudent() != null &&
-                quizService.getTestResult() != null &&
-                studentService.getStudent().equals(quizService.getTestResult().getStudent())) {
+        if (student != null &&
+                testResult != null &&
+                student.equals(testResult.getStudent())) {
             return Availability.available();
         }
 
@@ -54,13 +59,13 @@ public class Commands {
 
     @ShellMethod(value = "Determine user", key = {"determine-user"})
     public void determineCurrentStudent() {
-        studentService.determineCurrentStudent();
+        student = studentService.determineCurrentStudent();
     }
 
     @ShellMethod(value = "Show result", key = {"show-result"})
     @ShellMethodAvailability({"isTested"})
     public void showResult() {
-        resultService.showResult(quizService.getTestResult());
+        resultService.showResult(testResult);
     }
 
 

@@ -21,9 +21,6 @@ public class QuizServiceImpl implements QuizService {
 
     private final IOService ioService;
 
-    private TestResult testResult;
-
-
     public QuizServiceImpl(QuestionDao questionDao, IOService ioService) {
         this.questionDao = questionDao;
         this.ioService = ioService;
@@ -70,13 +67,12 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
-    public void executeTestFor(Student student) {
-        //this.student = student;
+    public TestResult executeTestFor(Student student) {
         ioService.printLine("");
         ioService.printFormattedColoredLine("TestService.answer.the.questions", CONSOLE_TEXT_COLOR_YELLOW);
 
         var questions = questionDao.findAll();
-        testResult = new TestResult(student);
+        var testResult = new TestResult(student);
 
         AtomicInteger questionNumber = new AtomicInteger();
         for (var question: questions) {
@@ -88,15 +84,9 @@ public class QuizServiceImpl implements QuizService {
             var isAnswerValid = rightAnswer == answer;
             testResult.applyAnswer(question, isAnswerValid);
         }
-
-    }
-
-    @Override
-    public TestResult getTestResult() {
         return testResult;
+
     }
-
-
 
 }
 
