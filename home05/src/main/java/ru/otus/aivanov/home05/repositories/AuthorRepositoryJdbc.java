@@ -2,14 +2,16 @@ package ru.otus.aivanov.home05.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.aivanov.home05.mappers.AuthorMapper;
 import ru.otus.aivanov.home05.models.Author;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,7 +20,19 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthorRepositoryJdbc implements AuthorRepository {
 
+    private static class AuthorMapper implements RowMapper<Author> {
+
+        @Override
+        public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
+            long id = rs.getLong("id");
+            String name = rs.getString("name");
+            return new Author(id, name);
+        }
+
+    }
+
     private final NamedParameterJdbcOperations jdbc;
+
 
     @Override
     public List<Author> findAll() {
@@ -39,7 +53,7 @@ public class AuthorRepositoryJdbc implements AuthorRepository {
 
     @Override
     public Author save(Author genre) {
-        if (genre.getId() == 0) {
+        if (genre.getId() == null) {
             return insert(genre);
         }
         return update(genre);

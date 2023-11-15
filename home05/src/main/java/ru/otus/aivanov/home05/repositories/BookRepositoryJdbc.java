@@ -2,13 +2,17 @@ package ru.otus.aivanov.home05.repositories;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import ru.otus.aivanov.home05.mappers.BookMapper;
+import ru.otus.aivanov.home05.models.Author;
 import ru.otus.aivanov.home05.models.Book;
+import ru.otus.aivanov.home05.models.Genre;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,14 +21,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookRepositoryJdbc implements BookRepository {
 
+    private static class BookMapper  implements RowMapper<Book> {
+
+        @Override
+        public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new Book(rs.getLong("b_id"), rs.getString("b_title"),
+                    new Author(rs.getLong("a_id"), rs.getString("name")),
+                    new Genre(rs.getLong("g_id"), rs.getString("g_name"))
+            );
+        }
+    }
+
+
     private final NamedParameterJdbcOperations jdbc;
 
     @Override
     public Optional<Book> findById(long id) {
         String sql = "select b.id as b_id, b.title as b_title, a.id as a_id, a.name, "
                 + "g.id as g_id, g.name as g_name from books b " +
-                "left join authors a on b.author_id=a.id " +
-                "left join genres g on b.genre_id=g.id where b.id=:id";
+                "join authors a on b.author_id=a.id " +
+                "join genres g on b.genre_id=g.id where b.id=:id";
         try {
             return Optional.ofNullable(jdbc.queryForObject(sql, Map.of("id", id), new BookMapper()));
         } catch (DataAccessException e) {
@@ -36,14 +52,14 @@ public class BookRepositoryJdbc implements BookRepository {
     public List<Book> findAll() {
         String sql = "select b.id as b_id, b.title as b_title, a.id as a_id, a.name, "
                 + "g.id as g_id, g.name as g_name from books b " +
-                "left join authors a on b.author_id=a.id " +
-                "left join genres g on b.genre_id=g.id ";
+                "join authors a on b.author_id=a.id " +
+                "join genres g on b.genre_id=g.id ";
         return jdbc.query(sql, new BookMapper());
     }
 
     @Override
     public Book save(Book book) {
-        if (book.getId() == 0) {
+        if (book.getId() == null) {
             return insert(book);
         }
         return update(book);
