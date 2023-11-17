@@ -107,54 +107,45 @@ class BookRepositoryJdbcTest {
     }
 
     private  List<Author> getDbAuthors() {
-        List<Author> Authors = new ArrayList<>();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("select id, name from authors");
 
-        for (Map row : rows) {
-            Author author = new Author();
-            author.setId(((Long) row.get("id")));
-            author.setName((String) row.get("name"));
-            Authors.add(author);
-        }
-        return Authors;
+        return jdbcTemplate.query(
+                "select id, name from authors",
+                (resultSet, rowNum) ->
+                        new Author(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name")
+                        )
+        );
 
     }
 
     private  List<Genre> getDbGenres() {
-        List<Genre> Genres = new ArrayList<>();
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList("select id, name from genres");
-
-        for (Map row : rows) {
-            Genre genre = new Genre();
-            genre.setId(((Long) row.get("id")));
-            genre.setName((String) row.get("name"));
-            Genres.add(genre);
-        }
-        return Genres;
+        return jdbcTemplate.query(
+                "select id, name from genres",
+                (resultSet, rowNum) ->
+                        new Genre(
+                                resultSet.getLong("id"),
+                                resultSet.getString("name")
+                        )
+                );
     }
 
     private  List<Book> getDbBooks() {
 
-        List<Book> Books = new ArrayList<>();
         String sql = "select b.id as b_id, b.title as b_title, a.id as a_id, a.name a_name, "
                 + "g.id as g_id, g.name as g_name from books b " +
                 "join authors a on b.author_id=a.id " +
                 "join genres g on b.genre_id=g.id ";
 
-        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-        for (Map row : rows) {
-            Book book = new Book();
-
-            book.setId(((Long) row.get("b_id")));
-            book.setTitle((String) row.get("b_title"));
-            book.setAuthor(new Author((Long) row.get("b_id"),(String) row.get("a_name")));
-            book.setGenre(new Genre((Long) row.get("g_id"),(String) row.get("g_name")));
-
-            Books.add(book);
-        }
-
-        return Books;
+        return jdbcTemplate.query(
+                sql,
+                (resultSet, rowNum) ->
+                        new Book(
+                                resultSet.getLong("b_id"),
+                                resultSet.getString("b_title"),
+                                new Author(resultSet.getLong("a_id"),resultSet.getString("a_name")),
+                                new Genre(resultSet.getLong("g_id"),resultSet.getString("g_name"))
+                        )
+        );
     }
-
-
 }
