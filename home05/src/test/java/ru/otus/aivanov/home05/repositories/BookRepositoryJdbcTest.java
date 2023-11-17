@@ -140,19 +140,19 @@ class BookRepositoryJdbcTest {
         return jdbcTemplate.query(
                 sql,
                 (resultSet, rowNum) ->  {
-                        long AUTHOR_ID = resultSet.getLong("AUTHOR_ID");
-                        long  GENRE_ID = resultSet.getLong("GENRE_ID");
+                        long authorId = resultSet.getLong("AUTHOR_ID");
+                        long  genreId = resultSet.getLong("GENRE_ID");
 
                         return new Book(
                                 resultSet.getLong("id"),
                                 resultSet.getString("title"),
-                                dbAuthors.stream().filter(genre -> genre.getId() == AUTHOR_ID).findAny()
+                                dbAuthors.stream().filter(genre -> genre.getId() == authorId).findAny()
                                         .orElseThrow(() ->
-                                                new EntityNotFoundException("Author with id %d not found".formatted(AUTHOR_ID))
+                                                new EntityNotFoundException("Author with id %d not found".formatted(authorId))
                                         ),
-                                dbGenres.stream().filter(author -> author.getId() == GENRE_ID).findAny()
+                                dbGenres.stream().filter(author -> author.getId() == genreId).findAny()
                                         .orElseThrow(() ->
-                                                new EntityNotFoundException("Genre with id %d not found".formatted(GENRE_ID))
+                                                new EntityNotFoundException("Genre with id %d not found".formatted(genreId))
                                         )
                         );
                 } );
