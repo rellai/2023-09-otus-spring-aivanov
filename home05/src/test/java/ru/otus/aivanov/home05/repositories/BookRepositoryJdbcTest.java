@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.otus.aivanov.home05.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home05.models.Author;
 import ru.otus.aivanov.home05.models.Book;
 import ru.otus.aivanov.home05.models.Genre;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +41,7 @@ class BookRepositoryJdbcTest {
     void setUp() {
         dbAuthors = getDbAuthors();
         dbGenres = getDbGenres();
-        dbBooks =getDbBooks();
+        dbBooks =getDbBooks(dbAuthors,dbGenres);
     }
 
     @DisplayName("должен загружать книгу по id")
@@ -130,22 +133,28 @@ class BookRepositoryJdbcTest {
                 );
     }
 
-    private  List<Book> getDbBooks() {
+    private  List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
 
-        String sql = "select b.id as b_id, b.title as b_title, a.id as a_id, a.name a_name, "
-                + "g.id as g_id, g.name as g_name from books b " +
-                "join authors a on b.author_id=a.id " +
-                "join genres g on b.genre_id=g.id ";
+        String sql = "select id, title, AUTHOR_ID, GENRE_ID from books";
 
         return jdbcTemplate.query(
                 sql,
-                (resultSet, rowNum) ->
-                        new Book(
-                                resultSet.getLong("b_id"),
-                                resultSet.getString("b_title"),
-                                new Author(resultSet.getLong("a_id"),resultSet.getString("a_name")),
-                                new Genre(resultSet.getLong("g_id"),resultSet.getString("g_name"))
-                        )
-        );
+                (resultSet, rowNum) ->  {
+                        long AUTHOR_ID = resultSet.getLong("AUTHOR_ID");
+                        long  GENRE_ID = resultSet.getLong("GENRE_ID");
+
+                        return new Book(
+                                resultSet.getLong("id"),
+                                resultSet.getString("title"),
+                                dbAuthors.stream().filter(genre -> genre.getId() == AUTHOR_ID).findAny()
+                                        .orElseThrow(() ->
+                                                new EntityNotFoundException("Author with id %d not found".formatted(AUTHOR_ID))
+                                        ),
+                                dbGenres.stream().filter(author -> author.getId() == GENRE_ID).findAny()
+                                        .orElseThrow(() ->
+                                                new EntityNotFoundException("Genre with id %d not found".formatted(GENRE_ID))
+                                        )
+                        );
+                } );
     }
 }
