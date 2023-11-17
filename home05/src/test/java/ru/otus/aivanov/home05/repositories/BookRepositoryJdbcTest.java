@@ -11,11 +11,7 @@ import ru.otus.aivanov.home05.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home05.models.Author;
 import ru.otus.aivanov.home05.models.Book;
 import ru.otus.aivanov.home05.models.Genre;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
