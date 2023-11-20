@@ -8,6 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 @Entity(name = "genres")
+@Table(name = "genres")
 public class Genre {
 
     @Id
