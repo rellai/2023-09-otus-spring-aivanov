@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Setter
 @Table(name = "authors")
+@Entity
 public class Author {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

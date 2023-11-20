@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@Entity(name = "books")
 @Table(name = "books")
 public class Book {
     @Id
