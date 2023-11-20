@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class BookRepositoryJdbc implements BookRepository {
+public class BookRepositoryJpa implements BookRepository {
 
     private static class BookMapper  implements RowMapper<Book> {
 

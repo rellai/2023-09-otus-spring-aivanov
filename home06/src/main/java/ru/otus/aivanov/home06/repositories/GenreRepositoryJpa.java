@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class GenreRepositoryJdbc implements GenreRepository {
+public class GenreRepositoryJpa implements GenreRepository {
 
     private static class GenreMapper implements RowMapper<Genre> {
 

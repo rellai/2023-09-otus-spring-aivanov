@@ -3,6 +3,7 @@ package ru.otus.aivanov.home06.shell;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.aivanov.home06.converters.AuthorConverter;
 import ru.otus.aivanov.home06.models.Author;
 import ru.otus.aivanov.home06.services.AuthorService;
@@ -24,9 +25,11 @@ public class AuthorCommands {
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
+    @Transactional
     @ShellMethod(value = "Delete author", key = "da")
-    public long deleteGenre(long id) {
-        return authorService.deleteById(id);
+    public String deleteGenre(long id) {
+        authorService.deleteById(id);
+        return String.format("Author with id=%d has been deleted", id);
     }
 
     @ShellMethod(value = "Find author by id", key = "fa")
