@@ -4,7 +4,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Repository;
 import ru.otus.aivanov.home06.models.Author;
 import java.util.List;
@@ -25,20 +24,16 @@ public class AuthorRepositoryJpa implements AuthorRepository {
 
     @Override
     public Optional<Author> findById(long id) {
-        try {
             return Optional.of(em.find(Author.class, id));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
     }
 
     @Override
-    public Author save(Author genre) {
-        if (genre.getId() == null) {
-            em.persist(genre);
-            return (genre);
+    public Author save(Author book) {
+        if (book.getId() == null) {
+            em.persist(book);
+            return (book);
         }
-        return em.merge(genre);
+        return em.merge(book);
     }
 
     @Override

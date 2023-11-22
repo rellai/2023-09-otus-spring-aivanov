@@ -1,84 +1,49 @@
 package ru.otus.aivanov.home06.repositories;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
-import org.springframework.jdbc.support.GeneratedKeyHolder;
-import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import ru.otus.aivanov.home06.models.Genre;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
 public class GenreRepositoryJpa implements GenreRepository {
 
-    private static class GenreMapper implements RowMapper<Genre> {
-
-        @Override
-        public Genre mapRow(ResultSet resultSet, int i) throws SQLException {
-            long id = resultSet.getLong("id");
-            String name = resultSet.getString("name");
-            return new Genre(id, name);
-        }
-
-    }
-
-    private final NamedParameterJdbcOperations jdbc;
+    @PersistenceContext
+    private final EntityManager em;
 
     @Override
     public List<Genre> findAll() {
-        return jdbc.getJdbcOperations()
-                .query("select g.id, g.name from genres g", new GenreMapper());
+        TypedQuery<Genre> query = em.createQuery("select a from Genre as a", Genre.class);
+        return query.getResultList();
     }
 
     @Override
     public Optional<Genre> findById(long id) {
-        try {
-            return Optional.ofNullable(jdbc.queryForObject(
-                    "select id, name from genres where id=:id",
-                    Map.of("id", id), new GenreMapper()));
-        } catch (DataAccessException e) {
-            return Optional.empty();
-        }
+        return Optional.of(em.find(Genre.class, id));
     }
 
     @Override
     public Genre save(Genre genre) {
         if (genre.getId() == null) {
-            return insert(genre);
+            em.persist(genre);
+            return (genre);
         }
-        return update(genre);
+        return em.merge(genre);
     }
 
     @Override
-    public long deleteById(long id) {
-        return jdbc.update(
-                "delete from genres where id=:id", Map.of("id", id));
-    }
-
-    private Genre insert(Genre genre) {
-        MapSqlParameterSource parameterSource = new MapSqlParameterSource();
-        parameterSource.addValue("name", genre.getName());
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        jdbc.update(
-                "insert into genres (name) values (:name)", parameterSource, keyHolder, new String[]{"id"});
-        genre.setId(keyHolder.getKey().longValue());
-        return genre;
-    }
-
-    private Genre update(Genre genre) {
-        jdbc.update(
-                "update genres g set g.name=:name where g.id=:id",
-                Map.of("id", genre.getId(), "name", genre.getName()));
-        return genre;
+    public boolean deleteById(long id) {
+        Genre genre = em.find(Genre.class, id);
+        if (genre != null) {
+            em.remove(genre);
+            return true;
+        }
+        return false;
     }
 
 }

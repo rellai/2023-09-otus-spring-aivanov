@@ -12,5 +12,5 @@ public interface GenreService {
 
     Genre save(Genre genre);
 
-    long deleteById(long id);
+    void deleteById(long id);
 }

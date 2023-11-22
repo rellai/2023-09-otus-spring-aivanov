@@ -1,13 +1,13 @@
 package ru.otus.aivanov.home06.repositories;
 
+import jakarta.persistence.TypedQuery;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
-import org.springframework.jdbc.core.JdbcTemplate;
-import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Author;
 import ru.otus.aivanov.home06.models.Book;
 import ru.otus.aivanov.home06.models.Genre;
@@ -16,8 +16,8 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
-@JdbcTest
+@DisplayName("Репозиторий на основе JPA для работы с книгами ")
+@DataJpaTest
 @Import({BookRepositoryJpa.class})
 class BookRepositoryJdbcTest {
 
@@ -27,7 +27,8 @@ class BookRepositoryJdbcTest {
     private BookRepositoryJpa bookRepositoryJpa;
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    private TestEntityManager em;
+
     private List<Author> dbAuthors;
 
     private List<Genre> dbGenres;
@@ -65,7 +66,7 @@ class BookRepositoryJdbcTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var expectedBook = new Book(null, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
+        var expectedBook = new Book(null, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0), null);
         var returnedBook = bookRepositoryJpa.save(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
@@ -80,7 +81,7 @@ class BookRepositoryJdbcTest {
     @DisplayName("должен сохранять измененную книгу")
     @Test
     void shouldSaveUpdatedBook() {
-        var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2));
+        var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2), null);
 
         assertThat(bookRepositoryJpa.findById(expectedBook.getId()))
                 .isPresent()
@@ -107,51 +108,24 @@ class BookRepositoryJdbcTest {
     }
 
     private  List<Author> getDbAuthors() {
-
-        return jdbcTemplate.query(
-                "select id, name from authors",
-                (resultSet, rowNum) ->
-                        new Author(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name")
-                        )
-        );
-
+        TypedQuery<Author> query = em.getEntityManager().createQuery("select a from Author a", Author.class);
+        return query.getResultList();
     }
 
     private  List<Genre> getDbGenres() {
-        return jdbcTemplate.query(
-                "select id, name from genres",
-                (resultSet, rowNum) ->
-                        new Genre(
-                                resultSet.getLong("id"),
-                                resultSet.getString("name")
-                        )
-                );
+        TypedQuery<Genre> query = em.getEntityManager().createQuery("select a from Genre a", Genre.class);
+        return query.getResultList();
     }
 
     private  List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
 
-        String sql = "select id, title, AUTHOR_ID, GENRE_ID from books";
+        TypedQuery<Book> query = em.getEntityManager().createQuery("select b from Book b " +
+                    "join fetch b.author " +
+                    "join fetch b.genre " +
+                    "join fetch b.comments"
+                , Book.class);
+        return query.getResultList();
 
-        return jdbcTemplate.query(
-                sql,
-                (resultSet, rowNum) ->  {
-                        long authorId = resultSet.getLong("AUTHOR_ID");
-                        long  genreId = resultSet.getLong("GENRE_ID");
 
-                        return new Book(
-                                resultSet.getLong("id"),
-                                resultSet.getString("title"),
-                                dbAuthors.stream().filter(genre -> genre.getId() == authorId).findAny()
-                                        .orElseThrow(() ->
-                                                new EntityNotFoundException("Author with id %d not found".formatted(authorId))
-                                        ),
-                                dbGenres.stream().filter(author -> author.getId() == genreId).findAny()
-                                        .orElseThrow(() ->
-                                                new EntityNotFoundException("Genre with id %d not found".formatted(genreId))
-                                        )
-                        );
-                } );
     }
 }

@@ -2,6 +2,7 @@ package ru.otus.aivanov.home06.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Book;
 import ru.otus.aivanov.home06.repositories.AuthorRepository;
@@ -21,11 +22,15 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
-        return bookRepository.findById(id);
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        optionalBook.ifPresent(book -> book.getComments());
+        return optionalBook;
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Book> findAll() {
         return bookRepository.findAll();
     }
@@ -36,6 +41,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public Book update(long id, String title, long authorId, long genreId) {
         bookRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(id)));
@@ -44,15 +50,18 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteById(long id) {
-        bookRepository.deleteById(id);
+        if (!bookRepository.deleteById(id)) {
+            throw new EntityNotFoundException("Book with id %d not found".formatted(id));
+        }
     }
+
 
     private Book save(long id, String title, long authorId, long genreId) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+        var book = new Book(id, title, author, genre, null);
         return bookRepository.save(book);
     }
 }
