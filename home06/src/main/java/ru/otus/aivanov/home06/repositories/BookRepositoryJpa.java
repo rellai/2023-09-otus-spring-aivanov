@@ -26,7 +26,7 @@ public class BookRepositoryJpa implements BookRepository {
         EntityGraph<?> entityGraph = em.getEntityGraph("books-comments-entity-graph");
         Map<String, Object> properties = new HashMap<>();
         properties.put(FETCH.getKey(), entityGraph);
-        return Optional.ofNullable(em.find(Book.class, id));
+        return Optional.ofNullable(em.find(Book.class, id, properties));
     }
 
     @Override
