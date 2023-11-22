@@ -33,6 +33,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         if (!authorRepository.deleteById(id)) {
             throw new EntityNotFoundException("Author with id %d not found".formatted(id));

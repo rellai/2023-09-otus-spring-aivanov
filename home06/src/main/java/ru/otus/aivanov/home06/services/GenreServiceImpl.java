@@ -33,6 +33,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional
     public void deleteById(long id) {
         if (!genreRepository.deleteById(id)) {
             throw new EntityNotFoundException("Genre with id %d not found".formatted(id));
