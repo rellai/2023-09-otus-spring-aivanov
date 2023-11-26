@@ -13,6 +13,8 @@ public interface CommentRepository {
 
     public Comment save(Comment comment);
 
-    public boolean deleteById(long id);
+    public void deleteById(long id);
+
+    public void deleteAllByBookId(long id);
 
 }

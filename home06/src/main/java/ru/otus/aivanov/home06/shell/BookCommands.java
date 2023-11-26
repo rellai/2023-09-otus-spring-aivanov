@@ -3,6 +3,7 @@ package ru.otus.aivanov.home06.shell;
 import lombok.RequiredArgsConstructor;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import ru.otus.aivanov.home06.converters.BookCommentConverter;
 import ru.otus.aivanov.home06.converters.BookConverter;
 import ru.otus.aivanov.home06.services.BookService;
 
@@ -16,10 +17,12 @@ public class BookCommands {
 
     private final BookConverter bookConverter;
 
+    private final BookCommentConverter bookCommentConverter;
+
     @ShellMethod(value = "Find all books", key = "ab")
     public String findAllBooks() {
         return bookService.findAll().stream()
-                .map(bookConverter::bookToStringWOComment)
+                .map(bookConverter::bookToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
@@ -27,6 +30,14 @@ public class BookCommands {
     public String findBookById(long id) {
         return bookService.findById(id)
                 .map(bookConverter::bookToString)
+                .orElse("Book with id %d not found".formatted(id));
+    }
+
+
+    @ShellMethod(value = "Find book with comments by id", key = "bcbid")
+    public String findBookWCommentsById(long id) {
+        return bookService.findFullById(id)
+                .map(bookCommentConverter::bookToString)
                 .orElse("Book with id %d not found".formatted(id));
     }
 

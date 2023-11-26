@@ -11,8 +11,6 @@ public interface CommentService {
 
     public Optional<Comment> findById(long id);
 
-    public Comment save(Comment comment);
-
     public void deleteById(long id);
 
     public Comment create(long bookId, String text);

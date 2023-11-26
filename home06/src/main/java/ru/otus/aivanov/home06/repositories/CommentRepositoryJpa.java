@@ -3,6 +3,7 @@ package ru.otus.aivanov.home06.repositories;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
+import jakarta.persistence.Query;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.aivanov.home06.models.Comment;
@@ -39,13 +40,19 @@ public class CommentRepositoryJpa implements CommentRepository {
     }
 
     @Override
-    public boolean deleteById(long id) {
+    public void deleteById(long id) {
         Comment comment = em.find(Comment.class, id);
         if (comment != null) {
             em.remove(comment);
-            return true;
         }
-        return false;
+    }
+
+
+    @Override
+    public void deleteAllByBookId(long bookId) {
+        Query query = em.createQuery("delete from Comment as a where a.book.id=:bookId");
+        query.setParameter("bookId", bookId);
+        query.executeUpdate();
     }
 
 }

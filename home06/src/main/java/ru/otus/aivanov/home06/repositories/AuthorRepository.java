@@ -12,5 +12,5 @@ public interface AuthorRepository {
 
     Author save(Author author);
 
-    boolean deleteById(long id);
+    void deleteById(long id);
 }

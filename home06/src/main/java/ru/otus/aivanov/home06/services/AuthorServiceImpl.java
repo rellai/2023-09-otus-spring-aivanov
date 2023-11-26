@@ -3,10 +3,8 @@ package ru.otus.aivanov.home06.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Author;
 import ru.otus.aivanov.home06.repositories.AuthorRepository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -35,8 +33,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        if (!authorRepository.deleteById(id)) {
-            throw new EntityNotFoundException("Author with id %d not found".formatted(id));
-        }
+       authorRepository.deleteById(id);
     }
 }

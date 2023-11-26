@@ -3,7 +3,6 @@ package ru.otus.aivanov.home06.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Genre;
 import ru.otus.aivanov.home06.repositories.GenreRepository;
 
@@ -35,8 +34,6 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        if (!genreRepository.deleteById(id)) {
-            throw new EntityNotFoundException("Genre with id %d not found".formatted(id));
-        }
+        genreRepository.deleteById(id);
     }
 }

@@ -66,7 +66,7 @@ class BookRepositoryJdbcTest {
     @DisplayName("должен сохранять новую книгу")
     @Test
     void shouldSaveNewBook() {
-        var expectedBook = new Book(null, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0), null);
+        var expectedBook = new Book(null, "BookTitle_10500", dbAuthors.get(0), dbGenres.get(0));
         var returnedBook = bookRepositoryJpa.save(expectedBook);
         assertThat(returnedBook).isNotNull()
                 .matches(book -> book.getId() > 0)
@@ -81,7 +81,7 @@ class BookRepositoryJdbcTest {
     @DisplayName("должен сохранять измененную книгу")
     @Test
     void shouldSaveUpdatedBook() {
-        var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2), null);
+        var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2), dbGenres.get(2));
 
         assertThat(bookRepositoryJpa.findById(expectedBook.getId()))
                 .isPresent()
@@ -121,8 +121,7 @@ class BookRepositoryJdbcTest {
 
         TypedQuery<Book> query = em.getEntityManager().createQuery("select b from Book b " +
                     "join fetch b.author " +
-                    "join fetch b.genre " +
-                    "join fetch b.comments"
+                    "join fetch b.genre "
                 , Book.class);
         return query.getResultList();
 

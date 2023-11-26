@@ -19,6 +19,9 @@ public class CommentServiceImpl implements CommentService {
 
     private final BookService bookService;
 
+    private Comment save(Comment comment) {
+        return commentRepository.save(comment);
+    }
 
     @Override
     @Transactional(readOnly = true)
@@ -32,17 +35,11 @@ public class CommentServiceImpl implements CommentService {
         return commentRepository.findById(id);
     }
 
-    @Override
-    public Comment save(Comment comment) {
-        return commentRepository.save(comment);
-    }
 
     @Override
     @Transactional
     public void deleteById(long id) throws EntityNotFoundException {
-        if (!commentRepository.deleteById(id)) {
-            throw new EntityNotFoundException("Comment with id %d not found".formatted(id));
-        }
+        commentRepository.deleteById(id);
     }
 
     @Override
