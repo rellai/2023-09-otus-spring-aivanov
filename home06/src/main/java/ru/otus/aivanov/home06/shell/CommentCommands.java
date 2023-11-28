@@ -5,7 +5,6 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import ru.otus.aivanov.home06.converters.CommentConverter;
 import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
-import ru.otus.aivanov.home06.services.BookService;
 import ru.otus.aivanov.home06.services.CommentService;
 
 import java.util.stream.Collectors;
@@ -15,8 +14,6 @@ import java.util.stream.Collectors;
 public class CommentCommands {
 
     private final CommentService commentService;
-
-    private final BookService bookService;
 
     private final CommentConverter commentConverter;
 
