@@ -6,6 +6,6 @@ import ru.otus.aivanov.home06.models.Comment;
 @Component
 public class CommentConverter {
     public String commentToString(Comment comment) {
-        return "Id: %d, Comment: %s".formatted(comment.getId(), comment.getTxt());
+        return "Id: %d, Comment: %s".formatted(comment.getId(), comment.getText());
     }
 }

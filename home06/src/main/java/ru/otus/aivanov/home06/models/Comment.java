@@ -14,9 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-;
-
-
 
 
 @AllArgsConstructor
@@ -32,7 +29,7 @@ public class Comment {
     @Column(nullable = false)
     private Long id;
 
-    private String txt;
+    private String text;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "book_id")

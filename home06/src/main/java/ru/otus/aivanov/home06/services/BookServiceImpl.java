@@ -3,11 +3,9 @@ package ru.otus.aivanov.home06.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.otus.aivanov.home06.dto.BookDto;
 import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Book;
 import ru.otus.aivanov.home06.repositories.AuthorRepository;
-import ru.otus.aivanov.home06.repositories.BookCommentRepository;
 import ru.otus.aivanov.home06.repositories.BookRepository;
 import ru.otus.aivanov.home06.repositories.GenreRepository;
 
@@ -23,8 +21,6 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    private final BookCommentRepository bookCommentRepository;
-
     @Override
     @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
@@ -33,8 +29,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<BookDto> findFullById(long id) {
-        return bookCommentRepository.findById(id);
+    public Optional<Book> findFullById(long id) {
+        return bookRepository.findWithCommentsById(id);
     }
 
     @Override
@@ -59,7 +55,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(long id) {
-        bookCommentRepository.deleteByBookId(id);
+        bookRepository.deleteById(id);
     }
 
     private Book save(long id, String title, long authorId, long genreId) {
@@ -67,7 +63,7 @@ public class BookServiceImpl implements BookService {
                 .orElseThrow(() -> new EntityNotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new EntityNotFoundException("Genre with id %d not found".formatted(genreId)));
-        var book = new Book(id, title, author, genre);
+        var book = new Book(id, title, author, genre, null);
         return bookRepository.save(book);
     }
 }

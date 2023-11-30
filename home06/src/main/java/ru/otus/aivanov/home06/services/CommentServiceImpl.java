@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.aivanov.home06.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home06.models.Book;
 import ru.otus.aivanov.home06.models.Comment;
+import ru.otus.aivanov.home06.repositories.BookRepository;
 import ru.otus.aivanov.home06.repositories.CommentRepository;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
 
-    private final BookService bookService;
+    private final BookRepository bookRepository;
 
     private Comment save(Comment comment) {
         return commentRepository.save(comment);
@@ -46,10 +47,10 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public Comment create(long bookId, String text) throws EntityNotFoundException {
         Comment comment = new Comment();
-        Book book = bookService.findById(bookId).orElseThrow(
+        Book book = bookRepository.findById(bookId).orElseThrow(
                 () -> new EntityNotFoundException("Book with id %d not found".formatted(bookId))
         );
-        comment.setTxt(text);
+        comment.setText(text);
         comment.setBook(book);
         return save(comment);
     }
@@ -61,7 +62,7 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book with id %d not found".formatted(id))
         );
-        comment.setTxt(text);
+        comment.setText(text);
         return save(comment);
     }
 
