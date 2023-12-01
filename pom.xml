@@ -16,5 +16,7 @@
         <module>home03</module>
         <module>home04</module>
         <module>home05</module>
+
+        <module>home07</module>        
     </modules>
 </project>
