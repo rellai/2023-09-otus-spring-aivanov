@@ -10,13 +10,13 @@ import ru.otus.aivanov.home07.models.Book;
 
 public interface BookRepository  extends JpaRepository<Book, Long>  {
 
-    @EntityGraph(attributePaths = {"author", "genre", "comments"})
+    @EntityGraph(value = "book-author-genre-comments-entity-graph")
     Optional<Book> findWithCommentsById(long id);
 
-    @EntityGraph(attributePaths = {"author", "genre"})
+    @EntityGraph(value = "book-author-genre-entity-graph")
     Optional<Book> findById(long id);
 
-    @EntityGraph(attributePaths = {"author", "genre"})
+    @EntityGraph(value = "book-author-genre-entity-graph")
     List<Book> findAll();
     
 
