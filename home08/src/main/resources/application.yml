@@ -1,0 +1,26 @@
+spring:
+  data:
+    mongodb:
+      database: book_db
+      port: 27017
+      host: localhost
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+    command:
+      version:
+        enabled: false
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: ru.otus.aivanov.home08.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
