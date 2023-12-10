@@ -42,11 +42,13 @@
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo</artifactId>
 			<version>4.11.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>de.flapdoodle.embed</groupId>
 			<artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
 			<version>4.11.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.github.cloudyrock.mongock</groupId>

@@ -1,9 +1,13 @@
 spring:
   data:
     mongodb:
+      authentication-database: admin
+      username: rellai
+      password: "131353"
       database: book_db
       port: 27017
       host: localhost
+
   shell:
     interactive:
       enabled: true
@@ -12,11 +16,7 @@ spring:
     command:
       version:
         enabled: false
-de:
-  flapdoodle:
-    mongodb:
-      embedded:
-        version: 4.4.16
+
 mongock:
   runner-type: "InitializingBean"
   change-logs-scan-package: ru.otus.aivanov.home08.changelogs
