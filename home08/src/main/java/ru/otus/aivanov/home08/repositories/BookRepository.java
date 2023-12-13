@@ -7,8 +7,6 @@ import ru.otus.aivanov.home08.models.Book;
 
 public interface BookRepository  extends MongoRepository<Book, String> {
 
-    List<Book> findAll();
-
     List<Book> findBooksByAuthorId(String authorId);
 
     long countBooksByGenreId(String genreId);

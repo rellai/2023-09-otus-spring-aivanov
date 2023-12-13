@@ -1,6 +1,7 @@
 package ru.otus.aivanov.home08.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.aivanov.home08.exceptions.EntityNotFoundException;
 import ru.otus.aivanov.home08.models.Book;
 import ru.otus.aivanov.home08.models.Comment;
@@ -36,16 +37,19 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    @Transactional
     public void deleteById(String id) throws EntityNotFoundException {
         commentRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void deleteByBookId(String bookId) throws EntityNotFoundException {
         commentRepository.deleteByBookId(bookId);
     }
 
     @Override
+    @Transactional
     public Comment create(String bookId, String text) throws EntityNotFoundException {
         Comment comment = new Comment();
         Book book = bookRepository.findById(bookId).orElseThrow(
@@ -58,6 +62,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    @Transactional
     public Comment update(String id, String text) throws EntityNotFoundException {
         Comment comment = findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Book with id %s not found".formatted(id))

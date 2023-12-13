@@ -11,9 +11,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 public class Main {
 
 	public static void main(String[] args) throws Exception {
-		//Console.main(args);
 		SpringApplication.run(Main.class, args);
-
 	}
 
 }
