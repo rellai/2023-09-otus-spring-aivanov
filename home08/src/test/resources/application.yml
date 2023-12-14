@@ -1,0 +1,31 @@
+spring:
+  data:
+    mongodb:
+      port: 0
+      database: test
+
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.aivanov.home08.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
