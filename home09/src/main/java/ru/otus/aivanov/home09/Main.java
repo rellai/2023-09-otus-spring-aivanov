@@ -9,8 +9,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		//Console.main(args);
 		SpringApplication.run(Main.class, args);
-		System.out.println("Server run http://localhost:8080");
-
+		System.out.println("Application started at http://localhost:8080");
 	}
 
 }

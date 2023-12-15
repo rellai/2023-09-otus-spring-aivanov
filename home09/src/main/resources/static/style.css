@@ -1,7 +1,8 @@
 body {
     font-family: arial, serif;
-    background-color: #fdfdf8;
+    background-color: #fdfdea;
 }
+
 table {
     border: 1px solid steelblue;
     width: 300px;
@@ -10,11 +11,23 @@ table {
 
 table tr td, th {
     padding: 5px 10px;
-    border: 1px solid steelblue;
+    border: 1px solid #d5a64d;
 }
 
 table td:last-child, td:first-child {
     width: 100px;
+}
+td.action {
+    text-align: center;
+}
+
+a {
+    color: #916003;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 label {
@@ -43,7 +56,7 @@ input:active, input:hover, input:focus, select:active, select:hover, select:focu
 
 button, input[type=button] {
     border-radius: 3px;
-    border: 1px solid silver;
+    border: 1px solid #fdb939;
     padding: 4px 12px;
     background-color: wheat;
     cursor: pointer;
