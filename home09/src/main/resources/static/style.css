@@ -1,0 +1,58 @@
+body {
+    font-family: arial, serif;
+    background-color: #fdfdf8;
+}
+table {
+    border: 1px solid steelblue;
+    width: 300px;
+    border-collapse: collapse;
+}
+
+table tr td, th {
+    padding: 5px 10px;
+    border: 1px solid steelblue;
+}
+
+table td:last-child, td:first-child {
+    width: 100px;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+}
+
+input:read-only {
+    background: lightgray;
+}
+
+.row {
+    margin-top: 10px;
+}
+
+input, select {
+border: 1px solid silver;
+border-radius: 4px;
+padding: 4px;
+}
+
+input:active, input:hover, input:focus, select:active, select:hover, select:focus {
+    border: 1px solid #818181;;
+    outline: none;
+}
+
+button, input[type=button] {
+    border-radius: 3px;
+    border: 1px solid silver;
+    padding: 4px 12px;
+    background-color: wheat;
+    cursor: pointer;
+}
+
+button:hover, input[type=button]:hover{
+    background-color: #ffd78d;
+}
+
+#comments {
+    display: none;
+}
