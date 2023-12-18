@@ -7,6 +7,7 @@
 <body>
 <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
 <h2>List of all books</h2>
+<a href="/book/new">New Book</a>
 <table class="books">
     <thead>
     <tr>
@@ -24,7 +25,7 @@
         <td th:text="${book.genre.name}">Roman</td>
         <td th:text="${book.author.name}">Pushkin</td>
         <td class="action">
-            <a href="editBook.html" th:href="@{/editBook/{id}(id=${book.id})}">Edit</a>
+            <a href="edit.html" th:href="@{/book/edit/{id}(id=${book.id})}">Edit</a>
         </td>
     </tr>
     </tbody>

@@ -10,8 +10,8 @@ import javax.validation.constraints.NotBlank;
  */
 public record GenreDto(Long id, @NotBlank(message = "Title cannot be empty") String name)  {
 
-    public Genre toDomainObject() {
-        return new Genre(id, name);
+    public static GenreDto toDto(Genre genre) {
+        return new GenreDto(genre.getId(), genre.getName());
     }
 
 }

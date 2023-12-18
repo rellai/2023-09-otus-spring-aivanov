@@ -10,9 +10,10 @@ import javax.validation.constraints.NotBlank;
  */
 public record AuthorDto(Long id, @NotBlank(message = "Title cannot be empty") String name) {
 
-    public Author toDomainObject() {
-        return new Author(id, name);
-    }
 
+
+    public static AuthorDto toDto(Author author) {
+        return new AuthorDto(author.getId(), author.getName());
+    }
 
 }
