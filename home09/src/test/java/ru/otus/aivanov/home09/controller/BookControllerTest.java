@@ -5,19 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.aivanov.home09.dto.BookDto;
-import ru.otus.aivanov.home09.exceptions.EntityNotFoundException;
-import ru.otus.aivanov.home09.models.Author;
-import ru.otus.aivanov.home09.models.Genre;
-import ru.otus.aivanov.home09.models.Book;
+import ru.otus.aivanov.home09.dto.*;
+import ru.otus.aivanov.home09.mapper.*;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
 import ru.otus.aivanov.home09.services.GenreService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.verify;
@@ -26,6 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 
 @WebMvcTest(BookController.class)
 class BookControllerTest {
@@ -42,11 +39,23 @@ class BookControllerTest {
     @MockBean
     private GenreService genreService;
 
+    @SpyBean(BookMapperImpl.class)
+    private BookMapper bookMapper;
+
+    @SpyBean(GenreMapperImpl.class)
+    private GenreMapper genreMapper;
+
+    @SpyBean(AuthorMapperImpl.class)
+    private AuthorMapper authorMapper;
+
+    @SpyBean(CommentMapperImpl.class)
+    private CommentMapper commentMapper;
+
     @Test
     void listShouldRenderBooks() throws Exception {
         val books = List.of(
-                new Book(1L, "Book1", new Author(2L, "Иван"), new Genre(2l, "Horror"), null),
-                new Book(1L, "Book2", new Author(2L, "Вадим"), new Genre(2l, "Сказки"), null)
+                new BookShowDto(1L, "Book1", "Иван", "Horror"),
+                new BookShowDto(1L, "Book2", "Иван", "Horror")
         );
         when(bookService.findAll()).thenReturn(books);
 
@@ -58,17 +67,17 @@ class BookControllerTest {
 
     @Test
     void editShouldRenderBookWithValidSelectedOptions() throws Exception {
-        val book = Optional.of(new Book(1L, "Book1", new Author(2L, "Иван"), new Genre(2L, "Horror"), java.util.Collections.emptyList()));
+        val book = new BookDto(1L, "Book1", 2L, 2L, java.util.Collections.emptyList());
         when(bookService.findFullById(1L)).thenReturn(book);
         when(authorService.findAll()).thenReturn(List.of(
-                new Author(1L, "Петр"),
-                new Author(2L, "Иван"),
-                new Author(3L, "Вадим")
+                new AuthorDto(1L, "Петр"),
+                new AuthorDto(2L, "Иван"),
+                new AuthorDto(3L, "Вадим")
         ));
         when(genreService.findAll()).thenReturn(List.of(
-                new Genre(1L, "Научпоп"),
-                new Genre(2L, "Horror"),
-                new Genre(3L, "Сказки")
+                new GenreDto(1L, "Научпоп"),
+                new GenreDto(2L, "Horror"),
+                new GenreDto(3L, "Сказки")
         ));
 
 
@@ -88,7 +97,7 @@ class BookControllerTest {
                 .param("author", "1")
         ).andExpect(status().is(302));
 
-        verify(bookService).update(1L, "Книга", 1L, 1L);
+        verify(bookService).update(new BookUpdateDto(1L, "Книга", 1L, 1L));
     }
 
     @Test
@@ -99,7 +108,7 @@ class BookControllerTest {
                 .param("author", "1")
         ).andExpect(status().is(302));
 
-        verify(bookService).insert("Книга",  1L, 1L);
+        verify(bookService).create(new BookCreateDto("Книга",  1L, 1L));
     }
 
     @Test

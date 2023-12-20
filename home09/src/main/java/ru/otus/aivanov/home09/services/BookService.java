@@ -1,20 +1,22 @@
 package ru.otus.aivanov.home09.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import ru.otus.aivanov.home09.models.Book;
+import ru.otus.aivanov.home09.dto.BookCreateDto;
+import ru.otus.aivanov.home09.dto.BookDto;
+import ru.otus.aivanov.home09.dto.BookShowDto;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
 
 public interface BookService {
-    Optional<Book> findById(long id);
+    BookDto findById(long id);
 
-    List<Book> findAll();
+    List<BookShowDto> findAll();
 
-    Book insert(String title, long authorId, long genreId);
+    BookDto create(BookCreateDto book);
 
-    Book update(long id, String title, long authorId, long genreId);
+    BookDto update(BookUpdateDto book);
 
     void deleteById(long id);
 
-    Optional<Book> findFullById(long id);
+    BookDto findFullById(long id);
 }

@@ -1,6 +1,5 @@
 package ru.otus.aivanov.home09.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,9 +10,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.aivanov.home09.dto.AuthorDto;
 import ru.otus.aivanov.home09.dto.BookDto;
+import ru.otus.aivanov.home09.dto.BookShowDto;
 import ru.otus.aivanov.home09.dto.GenreDto;
-import ru.otus.aivanov.home09.models.Book;
-import ru.otus.aivanov.home09.exceptions.EntityNotFoundException;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
+import ru.otus.aivanov.home09.dto.BookCreateDto;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
 import ru.otus.aivanov.home09.services.GenreService;
@@ -31,56 +31,62 @@ public class BookController {
 
     private final AuthorService authorService;
 
-    private final HttpServletRequest request;
+
+    private Entities getGetEntities() {
+        List<GenreDto> genres = genreService.findAll();
+        List<AuthorDto> authors = authorService.findAll();
+        return new Entities(genres, authors);
+    }
+
+    private record Entities(List<GenreDto> genres, List<AuthorDto> authors) {
+    }
 
     @GetMapping("/")
     public String list(Model model) {
-        List<Book> books = bookService.findAll();
+        List<BookShowDto> books = bookService.findAll();
         model.addAttribute("books", books);
         return "book/list";
     }
 
     @GetMapping("/book/edit/{id}")
     public String edit(@PathVariable("id") long id, Model model) {
-        BookDto book =   BookDto.toDTO(bookService.findFullById(id).orElseThrow(EntityNotFoundException::new)) ;
-        List<GenreDto> genres = genreService.findAll().stream().map(GenreDto::toDto).toList();
-        List<AuthorDto> authors = authorService.findAll().stream().map(AuthorDto::toDto).toList();
+        BookDto book =   bookService.findFullById(id);
+        Entities entities = getGetEntities();
         model.addAttribute("book", book);
-        model.addAttribute("genres", genres);
-        model.addAttribute("authors", authors);
+        model.addAttribute("genres", entities.genres());
+        model.addAttribute("authors", entities.authors());
         model.addAttribute("referer", "/book/edit/" + id);
         return "book/edit";
     }
 
     @GetMapping("/book/new")
     public String edit(Model model) {
-        BookDto book = new BookDto(null, "", null, null, null);
-        List<GenreDto> genres = genreService.findAll().stream().map(GenreDto::toDto).toList();
-        List<AuthorDto> authors = authorService.findAll().stream().map(AuthorDto::toDto).toList();
+        BookDto book = new BookDto();
+        Entities entities = getGetEntities();
         model.addAttribute("book", book);
-        model.addAttribute("genres", genres);
-        model.addAttribute("authors", authors);
+        model.addAttribute("genres", entities.genres);
+        model.addAttribute("authors", entities.authors);
         model.addAttribute("referer", "/book/new");
         return "book/edit";
     }
 
     @PostMapping("/book/edit/{id}")
-    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookDto book,
-                           BindingResult bindingResult, Model model) {
+    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto book,
+                         BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "book/edit";
         }
-        bookService.update(book.id(),book.title(), book.author(), book.genre());
+        bookService.update(book);
         return "redirect:/";
     }
 
     @PostMapping("/book/new")
-    public String create(@Valid @ModelAttribute("book") BookDto book,
+    public String create(@Valid @ModelAttribute("book") BookCreateDto book,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             return "book/edit";
         }
-        bookService.insert(book.title(), book.author(), book.genre());
+        bookService.create(book);
         return "redirect:/";
     }
 

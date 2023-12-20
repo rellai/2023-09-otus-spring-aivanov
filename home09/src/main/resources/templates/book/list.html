@@ -22,8 +22,8 @@
     <tr th:each="book : ${books}">
         <td th:text="${book.id}">1</td>
         <td th:text="${book.title}">Anna Karenina</td>
-        <td th:text="${book.genre.name}">Roman</td>
-        <td th:text="${book.author.name}">Pushkin</td>
+        <td th:text="${book.genre}">Roman</td>
+        <td th:text="${book.author}">Pushkin</td>
         <td class="action">
             <a href="edit.html" th:href="@{/book/edit/{id}(id=${book.id})}">Edit</a>
         </td>

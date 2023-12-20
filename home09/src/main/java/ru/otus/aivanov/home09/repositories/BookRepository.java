@@ -1,6 +1,5 @@
 package ru.otus.aivanov.home09.repositories;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -20,9 +19,6 @@ public interface BookRepository  extends JpaRepository<Book, Long>  {
 
     @EntityGraph(value = "book-author-genre-entity-graph")
     Optional<Book> findById(long id);
-
-    @EntityGraph(value = "book-author-genre-entity-graph")
-    List<Book> findAll();
 
     @Modifying
     @Query("update Book b set b.title = :title, b.author = :author, b.genre = :genre  where b.id = :id")

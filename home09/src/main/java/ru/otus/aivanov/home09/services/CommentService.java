@@ -1,21 +1,22 @@
 package ru.otus.aivanov.home09.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import ru.otus.aivanov.home09.models.Comment;
+import ru.otus.aivanov.home09.dto.CommentCreateDto;
+import ru.otus.aivanov.home09.dto.CommentDto;
+import ru.otus.aivanov.home09.dto.CommentUpdateDto;
 
 public interface CommentService {
 
-    public List<Comment> findAllByBook(Long bookId);
+    public List<CommentDto> findAllByBook(Long bookId);
 
-    public Optional<Comment> findById(long id);
+    public CommentDto findById(long id);
 
     public void deleteById(long id);
 
-    public Comment create(long bookId, String text);
+    public CommentDto create(CommentCreateDto comment);
 
-    public Comment update(long id, String text);
+    public CommentDto update(CommentUpdateDto comment);
 
     public void deleteByBookId(long bookId);
 

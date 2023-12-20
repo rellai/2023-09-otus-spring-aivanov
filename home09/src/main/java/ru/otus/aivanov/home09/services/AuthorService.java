@@ -1,16 +1,15 @@
 package ru.otus.aivanov.home09.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import ru.otus.aivanov.home09.models.Author;
+import ru.otus.aivanov.home09.dto.AuthorDto;
 
 public interface AuthorService {
-    List<Author> findAll();
+    List<AuthorDto> findAll();
 
-    Optional<Author> findById(long id);
+    AuthorDto findById(long id);
 
-    Author save(Author genre);
+    AuthorDto save(AuthorDto author);
 
     void deleteById(long id);
 }

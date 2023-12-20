@@ -1,16 +1,15 @@
 package ru.otus.aivanov.home09.services;
 
 import java.util.List;
-import java.util.Optional;
 
-import ru.otus.aivanov.home09.models.Genre;
+import ru.otus.aivanov.home09.dto.GenreDto;
 
 public interface GenreService {
-    List<Genre> findAll();
+    List<GenreDto> findAll();
 
-    Optional<Genre> findById(long id);
+    GenreDto findById(long id);
 
-    Genre save(Genre genre);
+    GenreDto save(GenreDto genre);
 
     void deleteById(long id);
 }

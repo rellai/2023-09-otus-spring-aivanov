@@ -6,6 +6,6 @@ import ru.otus.aivanov.home09.models.Comment;
 /**
  * DTO for {@link Comment}
  */
-public record CommentDto(Long id, String text)  {
+public record CommentCreateDto(Long book, String text)  {
 
 }
