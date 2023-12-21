@@ -104,6 +104,7 @@
 				</dependencies>
 				<configuration>
 					<configLocation>https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml</configLocation>
+					<excludes>**/generated/**/*</excludes>
 				</configuration>
 				<executions>
 					<execution>
