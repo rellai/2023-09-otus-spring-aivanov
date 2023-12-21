@@ -104,7 +104,9 @@
 				</dependencies>
 				<configuration>
 					<configLocation>https://raw.githubusercontent.com/OtusTeam/Spring/master/checkstyle.xml</configLocation>
-					<excludes>**/generated-sources/**/*</excludes>
+					<sourceDirectories>
+						<sourceDirectory>${project.basedir}/src/</sourceDirectory>
+					</sourceDirectories>
 				</configuration>
 				<executions>
 					<execution>

@@ -7,8 +7,20 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.aivanov.home09.dto.*;
-import ru.otus.aivanov.home09.mapper.*;
+import ru.otus.aivanov.home09.dto.AuthorDto;
+import ru.otus.aivanov.home09.dto.BookDto;
+import ru.otus.aivanov.home09.dto.BookShowDto;
+import ru.otus.aivanov.home09.dto.GenreDto;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
+import ru.otus.aivanov.home09.dto.BookCreateDto;
+import ru.otus.aivanov.home09.mapper.AuthorMapper;
+import ru.otus.aivanov.home09.mapper.AuthorMapperImpl;
+import ru.otus.aivanov.home09.mapper.BookMapper;
+import ru.otus.aivanov.home09.mapper.BookMapperImpl;
+import ru.otus.aivanov.home09.mapper.CommentMapper;
+import ru.otus.aivanov.home09.mapper.CommentMapperImpl;
+import ru.otus.aivanov.home09.mapper.GenreMapper;
+import ru.otus.aivanov.home09.mapper.GenreMapperImpl;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
 import ru.otus.aivanov.home09.services.GenreService;
@@ -84,8 +96,10 @@ class BookControllerTest {
         this.mvc.perform(get("/book/edit/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Book1")))
-                .andExpect(content().string(containsString("<option value=\"2\" selected=\"selected\">Иван</option>")))
-                .andExpect(content().string(containsString("<option value=\"2\" selected=\"selected\">Horror</option>")));
+                .andExpect(content().string(containsString(
+                        "<option value=\"2\" selected=\"selected\">Иван</option>")))
+                .andExpect(content().string(containsString(
+                        "<option value=\"2\" selected=\"selected\">Horror</option>")));
     }
 
     @Test
