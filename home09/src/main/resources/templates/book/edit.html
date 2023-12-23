@@ -8,10 +8,10 @@
     <body>
 
         <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post" th:object="${book}">
-            <h2 th:unless="*{id == null}">Edit book:</h2>
-            <h2 th:if="*{id == null}">New book:</h2>
+            <h2 th:if="${mode} == 'create'">Edit book:</h2>
+            <h2 th:if="${mode} == 'edit'">New book:</h2>
 
-            <div class="row" th:unless="*{id == null}">
+            <div class="row" th:if="${mode} == 'edit'">
                 <label for="id-input">ID:</label>
                 <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
             </div>
@@ -23,20 +23,20 @@
             </div>
 
             <div class="row">
-                <label for="genre">Genre:</label>
-                <select id="genre" th:field="*{genre}">
+                <label for="genreId">Genre:</label>
+                <select id="genreId" th:field="*{genreId}">
                     <option th:each="genreChoice : ${genres}"
                             th:value="${genreChoice.id}"
 
                             th:text="${genreChoice.name}">
                     </option>
                 </select>
-                <div class="errors" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}">Wrong genre error</div>
+                <div class="errors" th:if="${#fields.hasErrors('genreId')}" th:errors="*{genreId}">Wrong genre error</div>
             </div>
 
             <div class="row">
-                <label for="author">Author:</label>
-                <select id="author" th:field="*{author}">
+                <label for="authorId">Author:</label>
+                <select id="authorId" th:field="*{authorId}">
                     <option th:each="authorChoice : ${authors}"
                             th:value="${authorChoice.id}"
 
@@ -45,7 +45,7 @@
                 </select>
 
 
-                <div class="errors" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Wrong genre error</div>
+                <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong genre error</div>
             </div>
 
             <div class="row">
@@ -60,7 +60,7 @@
         </form>
         </div>
 
-        <div>
+        <div th:if="${mode} == 'edit'">
             <div class="row" th:unless="${#lists.isEmpty(book.comments)}">
                 <input class="showComments" type="button" value="Show Comments" onclick="document.getElementById('comments').setAttribute('style', 'display: block;')">
             </div>

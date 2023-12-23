@@ -1,7 +1,9 @@
 package ru.otus.aivanov.home09.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 /**
@@ -9,8 +11,8 @@ import java.util.List;
  */
 public record BookDto(Long id,
                       @NotBlank(message = "Title cannot be empty") String title,
-                      @NotNull(message = "Author cannot be empty") Long author,
-                      @NotNull(message = "Author cannot be empty") Long genre,
+                      @NotNull(message = "Author is required") Long authorId,
+                      @NotNull(message = "Genre is required") Long genreId,
                       List<CommentDto> comments) {
 
     public BookDto() {

@@ -9,7 +9,10 @@ public interface GenreService {
 
     GenreDto findById(long id);
 
-    GenreDto save(GenreDto genre);
+    GenreDto create(GenreDto genre);
+
+    GenreDto update(GenreDto genre);
+
 
     void deleteById(long id);
 }

@@ -34,7 +34,18 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public AuthorDto save(AuthorDto author) {
+    @Transactional
+    public AuthorDto create(AuthorDto author) {
+        if (author.id() == null || author.id() == 0) {
+            throw new NotFoundException("id must be null");
+        }
+        return authorMapper.toDto(authorRepository.save(authorMapper.toModel(author)));
+    }
+
+    @Override
+    @Transactional
+    public AuthorDto update(AuthorDto author) {
+        findById(author.id()).id();
         return authorMapper.toDto(authorRepository.save(authorMapper.toModel(author)));
     }
 

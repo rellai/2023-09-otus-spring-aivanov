@@ -35,9 +35,21 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public GenreDto save(GenreDto genre) {
+    @Transactional
+    public GenreDto create(GenreDto genre) {
+        if (genre.id() == null || genre.id() == 0) {
+            throw new NotFoundException("id must be null");
+        }
         return genreMapper.toDto(genreRepository.save(genreMapper.toModel(genre)));
     }
+
+    @Override
+    @Transactional
+    public GenreDto update(GenreDto genre) {
+        findById(genre.id()).id();
+        return genreMapper.toDto(genreRepository.save(genreMapper.toModel(genre)));
+    }
+
 
     @Override
     @Transactional

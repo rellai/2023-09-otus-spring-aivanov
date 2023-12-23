@@ -75,7 +75,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDto create(CommentCreateDto comment) throws NotFoundException {
 
-        return save(null, comment.text(), comment.book());
+        return save(null, comment.text(), comment.bookId());
     }
 
 

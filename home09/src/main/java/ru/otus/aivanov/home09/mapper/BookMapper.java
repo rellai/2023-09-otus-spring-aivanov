@@ -11,8 +11,8 @@ import ru.otus.aivanov.home09.models.Book;
 public interface BookMapper {
 
     @Mappings({
-            @Mapping(target = "author", source = "book.author.id"),
-            @Mapping(target = "genre", source = "book.genre.id")
+            @Mapping(target = "authorId", source = "book.author.id"),
+            @Mapping(target = "genreId", source = "book.genre.id")
     })
     BookDto toDto(Book book);
 

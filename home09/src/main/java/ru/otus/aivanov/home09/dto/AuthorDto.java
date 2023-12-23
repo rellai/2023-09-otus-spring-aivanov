@@ -1,6 +1,6 @@
 package ru.otus.aivanov.home09.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 
 /**

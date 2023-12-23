@@ -32,8 +32,8 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional(readOnly = true)
     public BookDto findById(long id) {
-        return bookMapper.toDto(bookRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Book with id %d not found".formatted(id))
+        return bookMapper.toDto(bookRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
     }
 
@@ -57,7 +57,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public BookDto create(BookCreateDto book) {
-        return save(0, book.title(), book.author(), book.genre());
+        return save(0, book.title(), book.authorId(), book.genreId());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class BookServiceImpl implements BookService {
     public BookDto update(BookUpdateDto book) {
         bookRepository.findById(book.id())
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(book.id())));
-        return save(book.id(), book.title(), book.author(), book.genre());
+        return save(book.id(), book.title(), book.authorId(), book.genreId());
     }
 
     @Override

@@ -17,8 +17,7 @@ import ru.otus.aivanov.home09.dto.BookCreateDto;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
 import ru.otus.aivanov.home09.services.GenreService;
-
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.List;
 
 @Controller
@@ -52,10 +51,11 @@ public class BookController {
     public String edit(@PathVariable("id") long id, Model model) {
         BookDto book =   bookService.findFullById(id);
         Entities entities = getGetEntities();
+        model.addAttribute("mode", "edit");
+        model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres());
         model.addAttribute("authors", entities.authors());
-        model.addAttribute("referer", "/book/edit/" + id);
         return "book/edit";
     }
 
@@ -63,20 +63,28 @@ public class BookController {
     public String edit(Model model) {
         BookDto book = new BookDto();
         Entities entities = getGetEntities();
+        model.addAttribute("referer", "/book/new");
+        model.addAttribute("mode", "create");
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres);
         model.addAttribute("authors", entities.authors);
-        model.addAttribute("referer", "/book/new");
         return "book/edit";
     }
 
     @PostMapping("/book/edit/{id}")
-    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto book,
+    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto returnBook,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            Entities entities = getGetEntities();
+            BookDto book =   bookService.findFullById(id);
+            model.addAttribute("referer", "/book/edit/" + id);
+            model.addAttribute("mode", "edit");
+            model.addAttribute("genres", entities.genres);
+            model.addAttribute("authors", entities.authors);
+            model.addAttribute("book", book);
             return "book/edit";
         }
-        bookService.update(book);
+        bookService.update(returnBook);
         return "redirect:/";
     }
 
@@ -84,6 +92,11 @@ public class BookController {
     public String create(@Valid @ModelAttribute("book") BookCreateDto book,
                            BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
+            Entities entities = getGetEntities();
+            model.addAttribute("referer", "/book/new");
+            model.addAttribute("mode", "create");
+            model.addAttribute("genres", entities.genres);
+            model.addAttribute("authors", entities.authors);
             return "book/edit";
         }
         bookService.create(book);
@@ -95,5 +108,7 @@ public class BookController {
         bookService.deleteById(id);
         return "redirect:/";
     }
+
+
 
 }

@@ -9,7 +9,9 @@ public interface AuthorService {
 
     AuthorDto findById(long id);
 
-    AuthorDto save(AuthorDto author);
+    AuthorDto update(AuthorDto author);
+
+    AuthorDto create(AuthorDto author);
 
     void deleteById(long id);
 }

@@ -107,8 +107,8 @@ class BookControllerTest {
         this.mvc.perform(post("/book/edit/1")
                 .param("id", "1")
                 .param("title", "Книга")
-                .param("genre", "1")
-                .param("author", "1")
+                .param("genreId", "1")
+                .param("authorId", "1")
         ).andExpect(status().is(302));
 
         verify(bookService).update(new BookUpdateDto(1L, "Книга", 1L, 1L));
@@ -118,8 +118,8 @@ class BookControllerTest {
     void createSaveShouldCallCreateMethodOfBookService() throws Exception {
         this.mvc.perform(post("/book/new")
                 .param("title", "Книга")
-                .param("genre", "1")
-                .param("author", "1")
+                .param("genreId", "1")
+                .param("authorId", "1")
         ).andExpect(status().is(302));
 
         verify(bookService).create(new BookCreateDto("Книга",  1L, 1L));
