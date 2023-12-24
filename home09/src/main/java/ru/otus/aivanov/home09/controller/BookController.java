@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.aivanov.home09.dto.AuthorDto;
+import ru.otus.aivanov.home09.dto.BookEditDto;
 import ru.otus.aivanov.home09.dto.BookDto;
-import ru.otus.aivanov.home09.dto.BookShowDto;
 import ru.otus.aivanov.home09.dto.GenreDto;
-import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
 import ru.otus.aivanov.home09.mapper.BookMapper;
 import ru.otus.aivanov.home09.services.AuthorService;
@@ -48,14 +47,14 @@ public class BookController {
 
     @GetMapping("/")
     public String list(Model model) {
-        List<BookShowDto> books = bookService.findAll();
+        List<BookDto> books = bookService.findAll();
         model.addAttribute("books", books);
         return "book/list";
     }
 
     @GetMapping("/book/edit/{id}")
     public String edit(@PathVariable("id") long id, Model model) {
-        BookDto book =   bookService.findById(id);
+        BookEditDto book =   bookService.findById(id);
         Entities entities = getGetEntities();
         model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
@@ -68,7 +67,7 @@ public class BookController {
 
     @GetMapping("/book/new")
     public String edit(Model model) {
-        BookDto book = new BookDto();
+        BookCreateDto book = new BookCreateDto("", null, null);
         Entities entities = getGetEntities();
         model.addAttribute("referer", "/book/new");
         model.addAttribute("book", book);
@@ -79,7 +78,7 @@ public class BookController {
     }
 
     @PostMapping("/book/edit/{id}")
-    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto book,
+    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookEditDto book,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             Entities entities = getGetEntities();

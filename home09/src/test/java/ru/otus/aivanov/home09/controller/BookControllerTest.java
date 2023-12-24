@@ -8,11 +8,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.aivanov.home09.dto.AuthorDto;
-import ru.otus.aivanov.home09.dto.BookDto;
-import ru.otus.aivanov.home09.dto.BookShowDto;
-import ru.otus.aivanov.home09.dto.GenreDto;
-import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
+import ru.otus.aivanov.home09.dto.BookDto;
+import ru.otus.aivanov.home09.dto.BookEditDto;
+import ru.otus.aivanov.home09.dto.GenreDto;
 import ru.otus.aivanov.home09.mapper.AuthorMapper;
 import ru.otus.aivanov.home09.mapper.AuthorMapperImpl;
 import ru.otus.aivanov.home09.mapper.BookMapper;
@@ -70,8 +69,8 @@ class BookControllerTest {
     @Test
     void listShouldRenderBooks() throws Exception {
         val books = List.of(
-                new BookShowDto(1L, "Book1", "Иван", "Horror"),
-                new BookShowDto(1L, "Book2", "Иван", "Horror")
+                new BookDto(1L, "Book1", "Иван", "Horror"),
+                new BookDto(1L, "Book2", "Иван", "Horror")
         );
         when(bookService.findAll()).thenReturn(books);
 
@@ -83,7 +82,7 @@ class BookControllerTest {
 
     @Test
     void editShouldRenderBookWithValidSelectedOptions() throws Exception {
-        val book = new BookDto(1L, "Book1", 2L, 2L/*, java.util.Collections.emptyList()*/);
+        val book = new BookEditDto(1L, "Book1", 2L, 2L/*, java.util.Collections.emptyList()*/);
         when(bookService.findById(1L)).thenReturn(book);
         when(authorService.findAll()).thenReturn(List.of(
                 new AuthorDto(1L, "Петр"),
@@ -115,7 +114,7 @@ class BookControllerTest {
                 .param("authorId", "1")
         ).andExpect(status().is(302));
 
-        verify(bookService).update(new BookUpdateDto(1L, "Книга", 1L, 1L));
+        verify(bookService).update(new BookEditDto(1L, "Книга", 1L, 1L));
     }
 
     @Test

@@ -8,10 +8,10 @@
     <body>
 
         <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post" th:object="${book}">
-            <h2 th:unless="*{id == null}">Edit book:</h2>
-            <h2 th:if="*{id == null}">New book:</h2>
+            <h2 th:unless="${referer == '/book/new'}">Edit book:</h2>
+            <h2 th:if="${referer == '/book/new'}">New book:</h2>
 
-            <div class="row" th:unless="*{id == null}">
+            <div class="row" th:unless="${referer == '/book/new'}">
                 <label for="id-input">ID:</label>
                 <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
             </div>
@@ -55,7 +55,7 @@
         </form>
 
         <div class="row">
-        <form th:action="@{/book/remove/{id}(id = ${book.id})}" method="post" th:unless="*{id == null}">
+        <form th:action="@{/book/remove/{id}(id = ${book.id})}" method="post" th:unless="${referer == '/book/new'}">
             <button type="submit" class="btn-link">Delete</button>
         </form>
         </div>
