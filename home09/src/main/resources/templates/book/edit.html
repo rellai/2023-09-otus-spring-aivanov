@@ -8,10 +8,10 @@
     <body>
 
         <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post" th:object="${book}">
-            <h2 th:unless="${mode} == 'create'">Edit book:</h2>
-            <h2 th:if="${mode} == 'create'">New book:</h2>
+            <h2 th:unless="*{id == null}">Edit book:</h2>
+            <h2 th:if="*{id == null}">New book:</h2>
 
-            <div class="row" th:unless="${mode} == 'create'">
+            <div class="row" th:unless="*{id == null}">
                 <label for="id-input">ID:</label>
                 <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
             </div>
@@ -60,12 +60,12 @@
         </form>
         </div>
 
-        <div th:if="${mode} == 'show'">
-            <div class="row" th:unless="   ${#lists.isEmpty(book.comments)}">
+        <div >
+            <div class="row" th:unless="   ${#lists.isEmpty(comments)}">
                 <input class="showComments" type="button" value="Show Comments" onclick="document.getElementById('comments').setAttribute('style', 'display: block;')">
             </div>
 
-            <div id="comments" th:unless="${#lists.isEmpty(book.comments)}">
+            <div id="comments" th:unless="${#lists.isEmpty(comments)}">
             <h2>List of all comments</h2>
                 <table>
                     <thead>
@@ -75,7 +75,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="commentIterator : ${book.comments}">
+                        <tr th:each="commentIterator : ${comments}">
                             <td th:text="${commentIterator.id}">1</td>
                             <td th:text="${commentIterator.text}">Anna Karenina</td>
                         </tr>

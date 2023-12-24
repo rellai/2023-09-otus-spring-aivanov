@@ -14,8 +14,10 @@ import ru.otus.aivanov.home09.dto.BookShowDto;
 import ru.otus.aivanov.home09.dto.GenreDto;
 import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
+import ru.otus.aivanov.home09.mapper.BookMapper;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
+import ru.otus.aivanov.home09.services.CommentService;
 import ru.otus.aivanov.home09.services.GenreService;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -29,6 +31,10 @@ public class BookController {
     private final GenreService genreService;
 
     private final AuthorService authorService;
+
+    private final CommentService commentService;
+
+    private final BookMapper bookMapper;
 
 
     private Entities getGetEntities() {
@@ -51,11 +57,12 @@ public class BookController {
     public String edit(@PathVariable("id") long id, Model model) {
         BookDto book =   bookService.findFullById(id);
         Entities entities = getGetEntities();
-        model.addAttribute("mode", "show");
         model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres());
         model.addAttribute("authors", entities.authors());
+        model.addAttribute("comments", book.comments());
+
         return "book/edit";
     }
 
@@ -64,10 +71,10 @@ public class BookController {
         BookDto book = new BookDto();
         Entities entities = getGetEntities();
         model.addAttribute("referer", "/book/new");
-        model.addAttribute("mode", "create");
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres);
         model.addAttribute("authors", entities.authors);
+        model.addAttribute("comments", null);
         return "book/edit";
     }
 
@@ -77,9 +84,11 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             Entities entities = getGetEntities();
             model.addAttribute("referer", "/book/edit/" + id);
-            model.addAttribute("mode", "edit");
             model.addAttribute("genres", entities.genres);
             model.addAttribute("authors", entities.authors);
+            model.addAttribute("comments", commentService.findAllByBook(id));
+
+
             return "book/edit";
         }
         bookService.update(book);
@@ -92,9 +101,9 @@ public class BookController {
         if (bindingResult.hasErrors()) {
             Entities entities = getGetEntities();
             model.addAttribute("referer", "/book/new");
-            model.addAttribute("mode", "create");
             model.addAttribute("genres", entities.genres);
             model.addAttribute("authors", entities.authors);
+            model.addAttribute("comments", null);
             return "book/edit";
         }
         bookService.create(book);
