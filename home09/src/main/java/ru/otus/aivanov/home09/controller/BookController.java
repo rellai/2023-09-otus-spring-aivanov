@@ -51,7 +51,7 @@ public class BookController {
     public String edit(@PathVariable("id") long id, Model model) {
         BookDto book =   bookService.findFullById(id);
         Entities entities = getGetEntities();
-        model.addAttribute("mode", "edit");
+        model.addAttribute("mode", "show");
         model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres());
@@ -72,19 +72,17 @@ public class BookController {
     }
 
     @PostMapping("/book/edit/{id}")
-    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto returnBook,
+    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto book,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             Entities entities = getGetEntities();
-            BookDto book =   bookService.findFullById(id);
             model.addAttribute("referer", "/book/edit/" + id);
             model.addAttribute("mode", "edit");
             model.addAttribute("genres", entities.genres);
             model.addAttribute("authors", entities.authors);
-            model.addAttribute("book", book);
             return "book/edit";
         }
-        bookService.update(returnBook);
+        bookService.update(book);
         return "redirect:/";
     }
 
