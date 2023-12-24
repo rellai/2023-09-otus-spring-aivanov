@@ -55,13 +55,13 @@ public class BookController {
 
     @GetMapping("/book/edit/{id}")
     public String edit(@PathVariable("id") long id, Model model) {
-        BookDto book =   bookService.findFullById(id);
+        BookDto book =   bookService.findById(id);
         Entities entities = getGetEntities();
         model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
         model.addAttribute("genres", entities.genres());
         model.addAttribute("authors", entities.authors());
-        model.addAttribute("comments", book.comments());
+        model.addAttribute("comments", commentService.findAllByBook(id));
 
         return "book/edit";
     }

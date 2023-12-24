@@ -12,16 +12,10 @@ import jakarta.persistence.NamedAttributeNode;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
-import java.util.List;
 
 
 @AllArgsConstructor
@@ -32,8 +26,9 @@ import java.util.List;
 @Table(name = "books")
 @NamedEntityGraph(name = "book-author-genre-entity-graph",
         attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
-@NamedEntityGraph(name = "book-author-genre-comments-entity-graph",
-        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre"), @NamedAttributeNode("comments")})
+/*@NamedEntityGraph(name = "book-author-genre-comments-entity-graph",
+        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre"),
+        @NamedAttributeNode("comments")})*/
 public class Book {
 
     @Id
@@ -51,9 +46,9 @@ public class Book {
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
 
-    @OneToMany(targetEntity = Comment.class, cascade = CascadeType.REMOVE, mappedBy = "book",
+    /*@OneToMany(targetEntity = Comment.class, cascade = CascadeType.REMOVE, mappedBy = "book",
             orphanRemoval = true, fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
-    private List<Comment> comments;
+    private List<Comment> comments;*/
 
 }

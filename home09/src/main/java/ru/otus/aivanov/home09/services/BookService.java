@@ -18,5 +18,4 @@ public interface BookService {
 
     void deleteById(long id);
 
-    BookDto findFullById(long id);
 }

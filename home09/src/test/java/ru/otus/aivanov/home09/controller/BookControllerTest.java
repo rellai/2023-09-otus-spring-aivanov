@@ -23,6 +23,7 @@ import ru.otus.aivanov.home09.mapper.GenreMapper;
 import ru.otus.aivanov.home09.mapper.GenreMapperImpl;
 import ru.otus.aivanov.home09.services.AuthorService;
 import ru.otus.aivanov.home09.services.BookService;
+import ru.otus.aivanov.home09.services.CommentService;
 import ru.otus.aivanov.home09.services.GenreService;
 
 import java.util.List;
@@ -50,6 +51,9 @@ class BookControllerTest {
 
     @MockBean
     private GenreService genreService;
+
+    @MockBean
+    private CommentService commentService;
 
     @SpyBean(BookMapperImpl.class)
     private BookMapper bookMapper;
@@ -79,8 +83,8 @@ class BookControllerTest {
 
     @Test
     void editShouldRenderBookWithValidSelectedOptions() throws Exception {
-        val book = new BookDto(1L, "Book1", 2L, 2L, java.util.Collections.emptyList());
-        when(bookService.findFullById(1L)).thenReturn(book);
+        val book = new BookDto(1L, "Book1", 2L, 2L/*, java.util.Collections.emptyList()*/);
+        when(bookService.findById(1L)).thenReturn(book);
         when(authorService.findAll()).thenReturn(List.of(
                 new AuthorDto(1L, "Петр"),
                 new AuthorDto(2L, "Иван"),

@@ -10,6 +10,7 @@ import ru.otus.aivanov.home09.mapper.BookMapper;
 import ru.otus.aivanov.home09.models.Book;
 import ru.otus.aivanov.home09.repositories.AuthorRepository;
 import ru.otus.aivanov.home09.repositories.BookRepository;
+import ru.otus.aivanov.home09.repositories.CommentRepository;
 import ru.otus.aivanov.home09.repositories.GenreRepository;
 
 import org.springframework.stereotype.Service;
@@ -29,19 +30,13 @@ public class BookServiceImpl implements BookService {
 
     private final BookMapper bookMapper;
 
+    private final CommentRepository commentRepository;
+
     @Override
     @Transactional(readOnly = true)
     public BookDto findById(long id) {
         return bookMapper.toDto(bookRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
-        ));
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public BookDto findFullById(long id) {
-        return bookMapper.toDto(bookRepository.findWithCommentsById(id).orElseThrow(
-                () -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
     }
 
@@ -71,6 +66,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(long id) {
+        commentRepository.deleteByBookId(id);
         bookRepository.deleteById(id);
     }
 
@@ -80,13 +76,12 @@ public class BookServiceImpl implements BookService {
         var genre = genreRepository.findById(genreId)
                 .orElseThrow(() -> new NotFoundException("Genre with id %d not found".formatted(genreId)));
 
-        if (id == 0) {
-            var book = new Book(id, title, author, genre, null);
-            return bookMapper.toDto(bookRepository.save(book));
-        } else {
-            bookRepository.update(id, title, author, genre);
-            return bookMapper.toDto(bookRepository.getById(id));
-        }
+
+            var book = new Book(id, title, author, genre);
+
+
+        return bookMapper.toDto(bookRepository.save(book));
+
 
     }
 
