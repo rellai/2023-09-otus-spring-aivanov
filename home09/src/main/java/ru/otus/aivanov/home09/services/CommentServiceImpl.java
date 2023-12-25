@@ -27,22 +27,6 @@ public class CommentServiceImpl implements CommentService {
 
     private final CommentMapper commentMapper;
 
-    private CommentDto save(Long id, String text, Long bookid) {
-
-        Comment comment = null;
-        if (id != null) {
-            comment = commentRepository.findById(id).orElseThrow(
-                    () -> new NotFoundException("Book with id %d not found".formatted(id))
-            );
-            comment.setText(text);
-        } else {
-            Book book = bookRepository.findById(bookid).orElseThrow(
-                    () -> new NotFoundException("Book with id %d not found".formatted(bookid))
-            );
-            comment = new Comment(null, text, book);
-        }
-        return commentMapper.toDto(commentRepository.save(comment));
-    }
 
     @Override
     @Transactional(readOnly = true)
@@ -73,16 +57,24 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     @Transactional
-    public CommentDto create(CommentCreateDto comment) throws NotFoundException {
+    public CommentDto create(CommentCreateDto commentDto) throws NotFoundException {
+        Book book = bookRepository.findById(commentDto.bookId())
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(commentDto.bookId()))
+        );
+        Comment comment = new Comment(null, commentDto.text(), book);
+        return commentMapper.toDto(commentRepository.save(comment));
 
-        return save(null, comment.text(), comment.bookId());
     }
 
 
     @Override
     @Transactional
-    public CommentDto update(CommentUpdateDto comment) throws NotFoundException {
-        return save(comment.id(), comment.text(), null);
+    public CommentDto update(CommentUpdateDto commentDto) throws NotFoundException {
+        Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(
+                    () -> new NotFoundException("Book with id %d not found".formatted(commentDto.id()))
+            );
+            comment.setText(commentDto.text());
+        return commentMapper.toDto(commentRepository.save(comment));
     }
 
 

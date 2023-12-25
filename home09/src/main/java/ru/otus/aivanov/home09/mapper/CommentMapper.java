@@ -10,5 +10,4 @@ public interface CommentMapper {
 
     CommentDto toDto(Comment comment);
 
-    Comment toModel(CommentDto author);
 }
