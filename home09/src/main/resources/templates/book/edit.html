@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
+    <body>
+
+        <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post" th:object="${book}">
+            <h2 th:unless="${referer == '/book/new'}">Edit book:</h2>
+            <h2 th:if="${referer == '/book/new'}">New book:</h2>
+
+            <div class="row" th:unless="${referer == '/book/new'}">
+                <label for="id-input">ID:</label>
+                <input id="id-input" type="text" readonly="readonly" name="id" th:value="*{id}" value="1"/>
+            </div>
+
+            <div class="row">
+                <label for="book-name-input">Title:</label>
+                <input id="book-name-input" name="title" type="text" th:value="*{title}" value="John Doe"/>
+                <div class="errors" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Wrong book title error</div>
+            </div>
+
+            <div class="row">
+                <label for="genreId">Genre:</label>
+                <select id="genreId" th:field="*{genreId}">
+                    <option th:each="genreChoice : ${genres}"
+                            th:value="${genreChoice.id}"
+
+                            th:text="${genreChoice.name}">
+                    </option>
+                </select>
+                <div class="errors" th:if="${#fields.hasErrors('genreId')}" th:errors="*{genreId}">Wrong genre error</div>
+            </div>
+
+            <div class="row">
+                <label for="authorId">Author:</label>
+                <select id="authorId" th:field="*{authorId}">
+                    <option th:each="authorChoice : ${authors}"
+                            th:value="${authorChoice.id}"
+
+                            th:text="${authorChoice.name}">
+                    </option>
+                </select>
+
+
+                <div class="errors" th:if="${#fields.hasErrors('authorId')}" th:errors="*{authorId}">Wrong genre error</div>
+            </div>
+
+            <div class="row">
+                <button type="submit">Save</button>
+                <a href="list.html" th:href="@{/}"><button type="button">Cancel</button></a>
+            </div>
+        </form>
+
+        <div class="row">
+        <form th:action="@{/book/remove/{id}(id = ${book.id})}" method="post" th:unless="${referer == '/book/new'}">
+            <button type="submit" class="btn-link">Delete</button>
+        </form>
+        </div>
+
+        <div >
+            <div class="row" th:unless="   ${#lists.isEmpty(comments)}">
+                <input class="showComments" type="button" value="Show Comments" onclick="document.getElementById('comments').setAttribute('style', 'display: block;')">
+            </div>
+
+            <div id="comments" th:unless="${#lists.isEmpty(comments)}">
+            <h2>List of all comments</h2>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Comment</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="commentIterator : ${comments}">
+                            <td th:text="${commentIterator.id}">1</td>
+                            <td th:text="${commentIterator.text}">Anna Karenina</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
