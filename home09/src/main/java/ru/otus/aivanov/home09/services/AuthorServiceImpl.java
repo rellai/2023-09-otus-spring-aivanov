@@ -28,8 +28,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional(readOnly = true)
     public AuthorDto findById(long id) {
-        return authorMapper.toDto(authorRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Book with id %d not found".formatted(id))
+        return authorMapper.toDto(authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
     }
 
@@ -45,7 +45,8 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     @Transactional
     public AuthorDto update(AuthorDto author) {
-        findById(author.id()).id();
+        authorRepository.findById(author.id())
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(author.id())));
         return authorMapper.toDto(authorRepository.save(authorMapper.toModel(author)));
     }
 

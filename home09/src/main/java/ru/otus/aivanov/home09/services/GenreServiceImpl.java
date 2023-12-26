@@ -29,8 +29,8 @@ public class GenreServiceImpl implements GenreService {
     @Override
     @Transactional(readOnly = true)
     public GenreDto findById(long id) {
-        return genreMapper.toDto(genreRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Book with id %d not found".formatted(id))
+        return genreMapper.toDto(genreRepository.findById(id).
+                orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
     }
 

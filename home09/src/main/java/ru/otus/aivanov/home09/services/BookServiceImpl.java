@@ -3,7 +3,7 @@ package ru.otus.aivanov.home09.services;
 import lombok.RequiredArgsConstructor;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
 import ru.otus.aivanov.home09.dto.BookDto;
-import ru.otus.aivanov.home09.dto.BookEditDto;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.exceptions.NotFoundException;
 import ru.otus.aivanov.home09.mapper.BookMapper;
 import ru.otus.aivanov.home09.models.Book;
@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookEditDto findById(long id) {
+    public BookUpdateDto findById(long id) {
         return bookMapper.toEditDto(bookRepository.findById(id).
                 orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookEditDto create(BookCreateDto bookDto) {
+    public BookUpdateDto create(BookCreateDto bookDto) {
         var author = authorRepository.findById(bookDto.authorId())
                 .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.authorId())));
         var genre = genreRepository.findById(bookDto.genreId())
@@ -64,7 +64,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookEditDto update(BookEditDto bookDto) {
+    public BookUpdateDto update(BookUpdateDto bookDto) {
         Book book = bookRepository.findById(bookDto.id())
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(bookDto.id())));
 
@@ -87,7 +87,7 @@ public class BookServiceImpl implements BookService {
         bookRepository.deleteById(id);
     }
 
-    private BookEditDto save(long id, String title, long authorId, long genreId) {
+    private BookUpdateDto save(long id, String title, long authorId, long genreId) {
         var author = authorRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(authorId)));
         var genre = genreRepository.findById(genreId)

@@ -1,6 +1,7 @@
 package ru.otus.aivanov.home09.controller;
 
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,7 +11,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.aivanov.home09.dto.AuthorDto;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
 import ru.otus.aivanov.home09.dto.BookDto;
-import ru.otus.aivanov.home09.dto.BookEditDto;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.dto.GenreDto;
 import ru.otus.aivanov.home09.mapper.AuthorMapper;
 import ru.otus.aivanov.home09.mapper.AuthorMapperImpl;
@@ -28,6 +29,8 @@ import ru.otus.aivanov.home09.services.GenreService;
 import java.util.List;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,6 +69,12 @@ class BookControllerTest {
     @SpyBean(CommentMapperImpl.class)
     private CommentMapper commentMapper;
 
+    @BeforeEach
+    void setUp() {
+        given(bookService.create(any(BookCreateDto.class))).willReturn(new BookUpdateDto(1L, "Книга", 1L, 1L));
+    }
+
+
     @Test
     void listShouldRenderBooks() throws Exception {
         val books = List.of(
@@ -82,7 +91,7 @@ class BookControllerTest {
 
     @Test
     void editShouldRenderBookWithValidSelectedOptions() throws Exception {
-        val book = new BookEditDto(1L, "Book1", 2L, 2L/*, java.util.Collections.emptyList()*/);
+        val book = new BookUpdateDto(1L, "Book1", 2L, 2L/*, java.util.Collections.emptyList()*/);
         when(bookService.findById(1L)).thenReturn(book);
         when(authorService.findAll()).thenReturn(List.of(
                 new AuthorDto(1L, "Петр"),
@@ -114,7 +123,7 @@ class BookControllerTest {
                 .param("authorId", "1")
         ).andExpect(status().is(302));
 
-        verify(bookService).update(new BookEditDto(1L, "Книга", 1L, 1L));
+        verify(bookService).update(new BookUpdateDto(1L, "Книга", 1L, 1L));
     }
 
     @Test

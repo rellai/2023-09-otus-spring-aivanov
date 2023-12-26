@@ -37,8 +37,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public CommentDto findById(long id) {
-        return commentMapper.toDto(commentRepository.findById(id).orElseThrow(
-                () -> new NotFoundException("Book with id %d not found".formatted(id))
+        return commentMapper.toDto(commentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
     }
 
@@ -70,8 +70,8 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional
     public CommentDto update(CommentUpdateDto commentDto) throws NotFoundException {
-        Comment comment = commentRepository.findById(commentDto.id()).orElseThrow(
-                    () -> new NotFoundException("Book with id %d not found".formatted(commentDto.id()))
+        Comment comment = commentRepository.findById(commentDto.id())
+                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(commentDto.id()))
             );
             comment.setText(commentDto.text());
         return commentMapper.toDto(commentRepository.save(comment));

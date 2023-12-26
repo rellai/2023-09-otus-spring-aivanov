@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.otus.aivanov.home09.dto.AuthorDto;
-import ru.otus.aivanov.home09.dto.BookEditDto;
+import ru.otus.aivanov.home09.dto.BookUpdateDto;
 import ru.otus.aivanov.home09.dto.BookDto;
 import ru.otus.aivanov.home09.dto.GenreDto;
 import ru.otus.aivanov.home09.dto.BookCreateDto;
@@ -54,7 +54,7 @@ public class BookController {
 
     @GetMapping("/book/edit/{id}")
     public String edit(@PathVariable("id") long id, Model model) {
-        BookEditDto book =   bookService.findById(id);
+        BookUpdateDto book =   bookService.findById(id);
         Entities entities = getGetEntities();
         model.addAttribute("referer", "/book/edit/" + id);
         model.addAttribute("book", book);
@@ -78,7 +78,7 @@ public class BookController {
     }
 
     @PostMapping("/book/edit/{id}")
-    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookEditDto book,
+    public String update(@PathVariable("id") long id, @Valid @ModelAttribute("book") BookUpdateDto book,
                          BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
             Entities entities = getGetEntities();
@@ -91,7 +91,7 @@ public class BookController {
             return "book/edit";
         }
         bookService.update(book);
-        return "redirect:/";
+        return "redirect:/book/edit/" + id;
     }
 
     @PostMapping("/book/new")
@@ -105,8 +105,8 @@ public class BookController {
             model.addAttribute("comments", null);
             return "book/edit";
         }
-        bookService.create(book);
-        return "redirect:/";
+        var bookCreated = bookService.create(book);
+        return "redirect:/book/edit/" + bookCreated.id();
     }
 
     @PostMapping("/book/remove/{id}")
