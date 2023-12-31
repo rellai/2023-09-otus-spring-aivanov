@@ -5,6 +5,25 @@
         <title>Title</title>
     </head>
     <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
+    <script th:inline="javascript">
+         const bookId = /*[[${id}]]*/ '0';
+         if (bookId != null) {
+            fetch('/api/comments?bookId='+bookId).then((response) => response.json()).then((comments) => {
+                console.log(comments);
+                const comments_body = document.getElementById("comments_body");
+                comments.forEach(function (comment) {
+                    comments_body.innerHTML += `
+                        <tr>
+                            <td>${comment.id}</td>
+                            <td>${comment.text}</td>
+                        </tr>
+                    `;
+                });
+            })
+         }
+    </script>
+
+
     <body>
 
         <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post" th:object="${book}">
@@ -61,10 +80,6 @@
         </div>
 
         <div >
-            <div class="row" th:unless="   ${#lists.isEmpty(comments)}">
-                <input class="showComments" type="button" value="Show Comments" onclick="document.getElementById('comments').setAttribute('style', 'display: block;')">
-            </div>
-
             <div id="comments" th:unless="${#lists.isEmpty(comments)}">
             <h2>List of all comments</h2>
                 <table>
@@ -74,11 +89,11 @@
                         <th>Comment</th>
                     </tr>
                     </thead>
-                    <tbody>
-                        <tr th:each="commentIterator : ${comments}">
+                    <tbody id="comments_body">
+                        <!-- <tr th:each="commentIterator : ${comments}">
                             <td th:text="${commentIterator.id}">1</td>
                             <td th:text="${commentIterator.text}">Anna Karenina</td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>

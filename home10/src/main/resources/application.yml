@@ -2,6 +2,7 @@ server:
   error:
     whitelabel:
       enabled: false
+    include-message: always
 spring:
   datasource:
     url: jdbc:h2:mem:maindb
