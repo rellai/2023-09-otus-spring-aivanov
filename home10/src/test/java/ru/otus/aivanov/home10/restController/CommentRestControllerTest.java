@@ -72,7 +72,7 @@ class CommentRestControllerTest {
     void editSaveShouldCallModifyMethodOfCommentService() throws Exception {
         this.mvc.perform(put("/api/comments/1")
         .contentType(APPLICATION_JSON)
-        .content(mapper.writeValueAsString( new CommentUpdateDto(1L, "комментарий")))     
+        .content(mapper.writeValueAsString(new CommentUpdateDto(1L, "комментарий")))
 
         ).andExpect(status().isOk());
 
@@ -83,7 +83,7 @@ class CommentRestControllerTest {
     void createSaveShouldCallCreateMethodOfCommentService() throws Exception {
         this.mvc.perform(post("/api/comments")
         .contentType(APPLICATION_JSON)
-        .content(mapper.writeValueAsString( new CommentCreateDto(1L, "Комментарий")))     
+        .content(mapper.writeValueAsString(new CommentCreateDto(1L, "Комментарий")))
         ).andExpect(status().isCreated());
 
         verify(commentService).create(new CommentCreateDto(1L, "Комментарий"));
