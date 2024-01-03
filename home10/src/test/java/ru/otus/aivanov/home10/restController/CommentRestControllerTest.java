@@ -22,7 +22,6 @@ import java.util.List;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -62,10 +61,7 @@ class CommentRestControllerTest {
         );
         when(commentService.findAllByBook(any(Long.class))).thenReturn(comments);
 
-        this.mvc.perform(get("/api/comments").
-        
-param("bookId", "1")
-       )
+        this.mvc.perform(get("/api/comments").param("bookId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Comment1")))
                 .andExpect(content().string(containsString("Comment2")));
@@ -76,7 +72,7 @@ param("bookId", "1")
     void editSaveShouldCallModifyMethodOfCommentService() throws Exception {
         this.mvc.perform(put("/api/comments/1")
         .contentType(APPLICATION_JSON)
-        .content(mapper.writeValueAsString(new CommentUpdateDto(1L, "комментарий")))
+        .content(mapper.writeValueAsString( new CommentUpdateDto(1L, "комментарий")))     
 
         ).andExpect(status().isOk());
 
@@ -87,7 +83,7 @@ param("bookId", "1")
     void createSaveShouldCallCreateMethodOfCommentService() throws Exception {
         this.mvc.perform(post("/api/comments")
         .contentType(APPLICATION_JSON)
-        .content(mapper.writeValueAsString(new CommentCreateDto(1L, "Комментарий")))
+        .content(mapper.writeValueAsString( new CommentCreateDto(1L, "Комментарий")))     
         ).andExpect(status().isCreated());
 
         verify(commentService).create(new CommentCreateDto(1L, "Комментарий"));
