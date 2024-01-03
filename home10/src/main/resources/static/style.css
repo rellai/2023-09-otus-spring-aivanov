@@ -5,7 +5,7 @@ body {
 
 table {
     border: 1px solid steelblue;
-    width: 300px;
+    width: 500px;
     border-collapse: collapse;
 }
 
@@ -43,10 +43,15 @@ input:read-only {
     margin-top: 10px;
 }
 
-input, select {
+input, select, textarea {
 border: 1px solid silver;
 border-radius: 4px;
 padding: 4px;
+}
+
+textarea {
+    width : 98%;
+    height: 50px;
 }
 
 input:active, input:hover, input:focus, select:active, select:hover, select:focus {
@@ -64,6 +69,15 @@ button, input[type=button] {
 
 button:hover, input[type=button]:hover{
     background-color: #ffd78d;
+}
+
+.submitComment, .cancelComment {
+    margin: 1px;
+}
+
+#newComment {
+    padding: 5px;
+    width: 350px;
 }
 
 

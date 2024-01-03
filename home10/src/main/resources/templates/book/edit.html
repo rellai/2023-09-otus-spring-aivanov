@@ -2,25 +2,156 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8">
-        <title>Title</title>
+        <title th:text="${book.title} ">Title</title>
     </head>
     <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
     <script th:inline="javascript">
-         const bookId = /*[[${id}]]*/ '0';
-         if (bookId != null) {
-            fetch('/api/comments?bookId='+bookId).then((response) => response.json()).then((comments) => {
-                console.log(comments);
-                const comments_body = document.getElementById("comments_body");
-                comments.forEach(function (comment) {
-                    comments_body.innerHTML += `
-                        <tr>
-                            <td>${comment.id}</td>
-                            <td>${comment.text}</td>
-                        </tr>
-                    `;
-                });
-            })
-         }
+
+        function commentsInit(bookId) {
+
+
+            if (bookId != null) {
+                fetch('/api/comments?bookId='+bookId).then((response) => response.json()).then((comments) => {
+                    const comments_body = document.getElementById("comments_body");
+                    if (comments_body != null) {
+                        comments_body.innerHTML = "";
+                        comments.forEach(function (comment) {
+                            comments_body.innerHTML += `
+                                <tr id="row_comment_${comment.id}">
+                                    <td>${comment.id}</td>
+                                    <td>${comment.text}</td>
+                                    <td>
+                                        <div><a class="refComment" onClick="commentDelete(${bookId}, ${comment.id}); return false" href="#">Delete</a></div>
+                                        <div><a class="refComment" onClick="commentCreateForm(${bookId}, ${comment.id}); deleteNode(this); return false" href="#">Edit</a></div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                })
+             }
+        }
+
+        function deleteNode(node) {
+            
+            if (typeof node !== 'undefined' && node.parentNode) {
+                node.parentNode.removeChild(node)
+            }
+        }
+
+        function commentDelete(bookId, commentId) {
+             if (commentId != null && bookId != null) {
+                fetch('/api/comments/'+commentId, {method: 'DELETE'})
+                .then((response) => response.json())
+                .then((response) => {
+                    commentsInit(bookId)})
+               // .then(document.getElementById(`row_comment_${commentId}`).remove())
+             }
+        }
+
+        function commentCreateForm(bookId, commentId) {
+            let commentNode;
+            const newComment = (typeof commentId == 'undefined');
+            if (!newComment) {
+                commentNode = document.getElementById(`row_comment_${commentId}`).childNodes[3];
+            } else {
+                commentNode = document.getElementById('newComment');
+            }
+
+            const commentText = commentNode.innerText;
+            
+            
+            formComment=document.createElement('FORM');
+            formComment.name='formUpdate';
+            formComment.id=`formUpdate${commentId}`; 
+            formComment.method='POST';
+            formComment.action=`/api/comments/${commentId}`;
+            
+            if (!newComment) {
+                inputId=document.createElement('INPUT');
+                inputId.type='HIDDEN';
+                inputId.name='id';
+                inputId.value=commentId;
+                formComment.appendChild(inputId);
+            };
+
+            inputBookId=document.createElement('INPUT');
+            inputBookId.type='HIDDEN';
+            inputBookId.name='bookId';
+            inputBookId.value=bookId;
+            formComment.appendChild(inputBookId);
+
+            inputText=document.createElement('TEXTAREA');
+            inputText.name='text';
+            inputText.innerText=commentText;
+            formComment.appendChild(inputText);
+
+            inputSubmit=document.createElement('INPUT');
+            inputSubmit.type='BUTTON';
+            inputSubmit.name='submit';
+            inputSubmit.className='submitComment';
+            inputSubmit.value='Submit';
+            inputSubmit.addEventListener("click", () => {
+                commentApply(new FormData(formComment));
+                deleteNode(formComment);
+            } );
+            formComment.appendChild(inputSubmit);
+
+            inputSubmit=document.createElement('INPUT');
+            inputSubmit.type='BUTTON';
+            inputSubmit.name='cancel';
+            inputSubmit.className='cancelComment';
+            inputSubmit.value='Cancel';
+            if (newComment) {
+                inputSubmit.addEventListener("click", () => {
+                    deleteNode(formComment);
+                } );
+            } else {
+                inputSubmit.addEventListener("click", () => {
+                    commentsInit(bookId);
+                } );
+            }
+            formComment.appendChild(inputSubmit);
+
+            commentNode.innerHTML = '';
+            commentNode.appendChild(formComment);
+        }
+
+        function commentApply(data) {
+            
+            
+            if (typeof data !== 'undefined') {
+                const dataObj = Object.fromEntries(data.entries());
+                console.log(dataObj);
+                let metod = '';
+                let url = '';
+                
+                if (Object.hasOwn(dataObj, 'id')) {
+                    metod = 'PUT';
+                    url = '/api/comments/'+dataObj.id;
+                } else {
+                    metod = 'POST';
+                    url = '/api/comments';
+                }
+                const bookId = dataObj.bookId;
+                fetch(url, {
+                    method: metod , 
+                    body: JSON.stringify(dataObj),
+                    headers: {
+                    "Content-Type": "application/json"
+                    } 
+                })
+                .then((response) => response.json())
+                .then((response) => {
+                    commentsInit(bookId)})
+             }
+        }
+
+        document.addEventListener('DOMContentLoaded', commentsInit(/*[[${id}]]*/ '0'), false);
+
+
+
+
     </script>
 
 
@@ -80,20 +211,19 @@
         </div>
 
         <div >
-            <div id="comments" th:unless="${#lists.isEmpty(comments)}">
+            <div id="comments" th:unless="${referer == '/book/new'}">
             <h2>List of all comments</h2>
+            <a class="refComment" th:onclick="'commentCreateForm(\'' + ${book.id} + '\'); return false'" href="#">Create Comment</a>
+            <div id="newComment"></div>
                 <table>
                     <thead>
                     <tr>
                         <th>ID</th>
                         <th>Comment</th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody id="comments_body">
-                        <!-- <tr th:each="commentIterator : ${comments}">
-                            <td th:text="${commentIterator.id}">1</td>
-                            <td th:text="${commentIterator.text}">Anna Karenina</td>
-                        </tr> -->
                     </tbody>
                 </table>
             </div>

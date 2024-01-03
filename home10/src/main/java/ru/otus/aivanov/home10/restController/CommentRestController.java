@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,13 +36,18 @@ public class CommentRestController {
     @DeleteMapping("/api/comments/{id}")
     public ResponseEntity<?> deleteComment(@PathVariable("id") long id) {
         commentService.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>("{\"message\": \"delete ok\"}", responseHeaders, HttpStatus.OK);
+
     }
 
     @PostMapping("/api/comments")
     public ResponseEntity<?> createComment(@Valid @RequestBody CommentCreateDto comment) {
-        commentService.create(comment);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        var createdComment = commentService.create(comment);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(createdComment, responseHeaders, HttpStatus.CREATED);
     }
 
     @PutMapping("/api/comments/{id}")
@@ -49,8 +56,12 @@ public class CommentRestController {
         if (comment.id() != id) {
             throw new Exception("JSON is not valid:id not equal path variable /api/comments/{id}");
         }
-        commentService.update(comment);
-        return new ResponseEntity<>(HttpStatus.OK);
+        var updatedComment = commentService.update(comment);
+        HttpHeaders responseHeaders = new HttpHeaders();
+        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
+        return new ResponseEntity<>(updatedComment, responseHeaders, HttpStatus.OK);
+
+        
     }
 
 }
