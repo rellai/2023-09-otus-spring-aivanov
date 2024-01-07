@@ -7,23 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.aivanov.home10.dto.BookCreateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
 import ru.otus.aivanov.home10.dto.BookUpdateDto;
-import ru.otus.aivanov.home10.mapper.AuthorMapper;
-import ru.otus.aivanov.home10.mapper.AuthorMapperImpl;
-import ru.otus.aivanov.home10.mapper.BookMapper;
-import ru.otus.aivanov.home10.mapper.BookMapperImpl;
-import ru.otus.aivanov.home10.mapper.CommentMapper;
-import ru.otus.aivanov.home10.mapper.CommentMapperImpl;
-import ru.otus.aivanov.home10.mapper.GenreMapper;
-import ru.otus.aivanov.home10.mapper.GenreMapperImpl;
-import ru.otus.aivanov.home10.services.AuthorService;
 import ru.otus.aivanov.home10.services.BookService;
-import ru.otus.aivanov.home10.services.CommentService;
-import ru.otus.aivanov.home10.services.GenreService;
 
 import java.util.List;
 
@@ -50,26 +38,6 @@ class BookRestControllerTest {
     @MockBean
     private BookService bookService;
 
-    @MockBean
-    private AuthorService authorService;
-
-    @MockBean
-    private GenreService genreService;
-
-    @MockBean
-    private CommentService commentService;
-
-    @SpyBean(BookMapperImpl.class)
-    private BookMapper bookMapper;
-
-    @SpyBean(GenreMapperImpl.class)
-    private GenreMapper genreMapper;
-
-    @SpyBean(AuthorMapperImpl.class)
-    private AuthorMapper authorMapper;
-
-    @SpyBean(CommentMapperImpl.class)
-    private CommentMapper commentMapper;
 
     @Autowired
     private ObjectMapper mapper;
@@ -130,5 +98,16 @@ class BookRestControllerTest {
 
         verify(bookService).deleteById(1);
     }
+
+    @Test
+    void ShouldRenderBook() throws Exception {
+        val book = new BookUpdateDto(1L, "Book1", 1L, 1L);
+        when(bookService.findById(1L)).thenReturn(book);
+
+        this.mvc.perform(get("/api/books/1"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Book1")));
+    }
+
 
 }
