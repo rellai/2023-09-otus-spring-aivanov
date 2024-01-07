@@ -4,6 +4,33 @@
     <meta charset="UTF-8">
     <title>List of all books</title>
 </head>
+<script th:inline="javascript">
+
+    function booksInit() {
+        fetch('/api/books').then((response) => response.json()).then((books) => {
+            const books_body = document.getElementById("books_body");
+            if (books_body != null) {
+                books_body.innerHTML = "";
+                books.forEach(function (book) {
+                    books_body.innerHTML += `
+                            <tr id="row_book_${book.id}">
+                                <td>${book.id}</td>
+                                <td>${book.title}</td>
+                                <td>${book.genre}</td>
+                                <td>${book.author}</td>
+                                <td class="action">
+                                    <a href="/book/edit/${book.id}">Edit</a>
+                                </td>
+                            </tr>
+                        `;
+                });
+            }
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', booksInit(), false);
+
+</script>
 <body>
 <link rel="stylesheet" href="../style.css" type="text/css" media="all" />
 <h2>List of all books</h2>
@@ -18,16 +45,8 @@
         <th>Action</th>
     </tr>
     </thead>
-    <tbody>
-    <tr th:each="book : ${books}">
-        <td th:text="${book.id}">1</td>
-        <td th:text="${book.title}">Anna Karenina</td>
-        <td th:text="${book.genre}">Roman</td>
-        <td th:text="${book.author}">Pushkin</td>
-        <td class="action">
-            <a href="edit.html" th:href="@{/book/edit/{id}(id=${book.id})}">Edit</a>
-        </td>
-    </tr>
+    <tbody id="books_body">
+
     </tbody>
 </table>
 

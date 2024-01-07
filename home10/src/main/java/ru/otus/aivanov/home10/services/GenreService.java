@@ -2,6 +2,7 @@ package ru.otus.aivanov.home10.services;
 
 import java.util.List;
 
+import ru.otus.aivanov.home10.dto.GenreCreateDto;
 import ru.otus.aivanov.home10.dto.GenreDto;
 
 public interface GenreService {
@@ -9,7 +10,7 @@ public interface GenreService {
 
     GenreDto findById(long id);
 
-    GenreDto create(GenreDto genre);
+    GenreDto create(GenreCreateDto genre);
 
     GenreDto update(GenreDto genre);
 

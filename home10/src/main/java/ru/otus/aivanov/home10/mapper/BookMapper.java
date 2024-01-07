@@ -3,9 +3,12 @@ package ru.otus.aivanov.home10.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import ru.otus.aivanov.home10.dto.BookCreateDto;
 import ru.otus.aivanov.home10.dto.BookUpdateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
+import ru.otus.aivanov.home10.models.Author;
 import ru.otus.aivanov.home10.models.Book;
+import ru.otus.aivanov.home10.models.Genre;
 
 @Mapper(componentModel = "spring", uses = {CommentMapper.class})
 public interface BookMapper {
@@ -22,6 +25,9 @@ public interface BookMapper {
     })
     BookDto toDto(Book book);
 
-
+    @Mapping(target = "author", source = "author")
+    @Mapping(target = "genre", source = "genre")
+    @Mapping(target = "id", ignore = true)
+    Book toModel(BookCreateDto book, Author author, Genre genre);
 
 }

@@ -2,11 +2,7 @@ package ru.otus.aivanov.home10.restController;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.aivanov.home10.dto.CommentCreateDto;
 import ru.otus.aivanov.home10.dto.CommentDto;
@@ -34,34 +31,25 @@ public class CommentRestController {
     }
 
     @DeleteMapping("/api/comments/{id}")
-    public ResponseEntity<?> deleteComment(@PathVariable("id") long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteComment(@PathVariable("id") long id) {
         commentService.deleteById(id);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>("{\"message\": \"delete ok\"}", responseHeaders, HttpStatus.OK);
-
+        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/api/comments")
-    public ResponseEntity<?> createComment(@Valid @RequestBody CommentCreateDto comment) {
-        var createdComment = commentService.create(comment);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(createdComment, responseHeaders, HttpStatus.CREATED);
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDto createComment(@Valid @RequestBody CommentCreateDto comment) {
+        return commentService.create(comment);
     }
 
     @PutMapping("/api/comments/{id}")
-    public ResponseEntity<?> updateComment(@PathVariable("id") long id,
-                                           @Valid @RequestBody CommentUpdateDto comment) throws Exception {
-        if (comment.id() != id) {
-            throw new Exception("JSON is not valid:id not equal path variable /api/comments/{id}");
+    @ResponseStatus(HttpStatus.OK)
+    public CommentDto updateComment(@PathVariable("id") long id,
+                                           @Valid @RequestBody CommentUpdateDto comment) {
+        if (comment.id() == id) {
+            return commentService.update(comment);
         }
-        var updatedComment = commentService.update(comment);
-        HttpHeaders responseHeaders = new HttpHeaders();
-        responseHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return new ResponseEntity<>(updatedComment, responseHeaders, HttpStatus.OK);
-
-        
+        return null;
     }
-
 }

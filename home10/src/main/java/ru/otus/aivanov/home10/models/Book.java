@@ -26,9 +26,6 @@ import lombok.Setter;
 @Table(name = "books")
 @NamedEntityGraph(name = "book-author-genre-entity-graph",
         attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre")})
-/*@NamedEntityGraph(name = "book-author-genre-comments-entity-graph",
-        attributeNodes = {@NamedAttributeNode("author"), @NamedAttributeNode("genre"),
-        @NamedAttributeNode("comments")})*/
 public class Book {
 
     @Id
@@ -45,10 +42,5 @@ public class Book {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "genre_id", nullable = false)
     private Genre genre;
-
-    /*@OneToMany(targetEntity = Comment.class, cascade = CascadeType.REMOVE, mappedBy = "book",
-            orphanRemoval = true, fetch = FetchType.LAZY)
-    @Fetch(FetchMode.SUBSELECT)
-    private List<Comment> comments;*/
 
 }

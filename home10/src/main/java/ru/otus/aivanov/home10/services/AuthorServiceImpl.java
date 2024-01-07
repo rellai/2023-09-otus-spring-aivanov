@@ -1,6 +1,7 @@
 package ru.otus.aivanov.home10.services;
 
 import lombok.RequiredArgsConstructor;
+import ru.otus.aivanov.home10.dto.AuthorCreateDto;
 import ru.otus.aivanov.home10.dto.AuthorDto;
 import ru.otus.aivanov.home10.exceptions.NotFoundException;
 import ru.otus.aivanov.home10.mapper.AuthorMapper;
@@ -29,16 +30,13 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional(readOnly = true)
     public AuthorDto findById(long id) {
         return authorMapper.toDto(authorRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(id))
         ));
     }
 
     @Override
     @Transactional
-    public AuthorDto create(AuthorDto author) {
-        if (author.id() == null || author.id() == 0) {
-            throw new NotFoundException("id must be null");
-        }
+    public AuthorDto create(AuthorCreateDto author) {
         return authorMapper.toDto(authorRepository.save(authorMapper.toModel(author)));
     }
 
@@ -46,7 +44,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     public AuthorDto update(AuthorDto author) {
         authorRepository.findById(author.id())
-                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(author.id())));
+                .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(author.id())));
         return authorMapper.toDto(authorRepository.save(authorMapper.toModel(author)));
     }
 

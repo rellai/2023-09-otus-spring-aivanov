@@ -92,7 +92,7 @@ class CommentRestControllerTest {
     @Test
     void removeShouldCallRemoveMethodOfCommentService() throws Exception {
         this.mvc.perform(delete("/api/comments/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(commentService).deleteById(1);
     }

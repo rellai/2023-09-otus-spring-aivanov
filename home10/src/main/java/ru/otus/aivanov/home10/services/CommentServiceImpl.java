@@ -31,14 +31,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     @Transactional(readOnly = true)
     public List<CommentDto> findAllByBook(Long bookId) {
-        return commentRepository.findAllByBookId(bookId).stream().map(commentMapper::toDto).collect(Collectors.toList());
+        return commentRepository.findAllByBookId(bookId).stream()
+                .map(commentMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public CommentDto findById(long id) {
         return commentMapper.toDto(commentRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
+                .orElseThrow(() -> new NotFoundException("Comment with id %d not found".formatted(id))
         ));
     }
 
@@ -61,8 +63,8 @@ public class CommentServiceImpl implements CommentService {
         Book book = bookRepository.findById(commentDto.bookId())
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(commentDto.bookId()))
         );
-        Comment comment = new Comment(null, commentDto.text(), book);
-        return commentMapper.toDto(commentRepository.save(comment));
+        Comment comment = commentMapper.toModel(commentDto,book) ;
+        return commentMapper.toDto(commentRepository.save(commentMapper.toModel(commentDto,book)));
 
     }
 
@@ -71,7 +73,7 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     public CommentDto update(CommentUpdateDto commentDto) throws NotFoundException {
         Comment comment = commentRepository.findById(commentDto.id())
-                .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(commentDto.id()))
+                .orElseThrow(() -> new NotFoundException("Comment with id %d not found".formatted(commentDto.id()))
             );
             comment.setText(commentDto.text());
         return commentMapper.toDto(commentRepository.save(comment));

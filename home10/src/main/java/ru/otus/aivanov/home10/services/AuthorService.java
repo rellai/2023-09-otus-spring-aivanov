@@ -2,6 +2,7 @@ package ru.otus.aivanov.home10.services;
 
 import java.util.List;
 
+import ru.otus.aivanov.home10.dto.AuthorCreateDto;
 import ru.otus.aivanov.home10.dto.AuthorDto;
 
 public interface AuthorService {
@@ -11,7 +12,7 @@ public interface AuthorService {
 
     AuthorDto update(AuthorDto author);
 
-    AuthorDto create(AuthorDto author);
+    AuthorDto create(AuthorCreateDto author);
 
     void deleteById(long id);
 }
