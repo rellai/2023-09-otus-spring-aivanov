@@ -100,7 +100,7 @@ class BookRestControllerTest {
     }
 
     @Test
-    void ShouldRenderBook() throws Exception {
+    void shouldRenderBook() throws Exception {
         val book = new BookUpdateDto(1L, "Book1", 1L, 1L);
         when(bookService.findById(1L)).thenReturn(book);
 

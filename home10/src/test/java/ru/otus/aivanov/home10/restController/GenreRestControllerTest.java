@@ -6,9 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.otus.aivanov.home10.dto.AuthorDto;
 import ru.otus.aivanov.home10.dto.GenreDto;
-import ru.otus.aivanov.home10.services.AuthorService;
 import ru.otus.aivanov.home10.services.GenreService;
 
 import java.util.List;
