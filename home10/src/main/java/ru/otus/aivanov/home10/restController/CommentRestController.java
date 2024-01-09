@@ -34,7 +34,6 @@ public class CommentRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteComment(@PathVariable("id") long id) {
         commentService.deleteById(id);
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/api/comments")
@@ -44,12 +43,9 @@ public class CommentRestController {
     }
 
     @PutMapping("/api/comments/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public CommentDto updateComment(@PathVariable("id") long id,
                                            @Valid @RequestBody CommentUpdateDto comment) {
-        if (comment.id() == id) {
-            return commentService.update(comment);
-        }
-        return null;
+        return commentService.update(comment);
+
     }
 }

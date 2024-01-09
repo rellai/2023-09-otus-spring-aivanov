@@ -38,7 +38,6 @@ public class BookRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable("id") long id) {
         bookService.deleteById(id);
-        //return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @PostMapping("/api/books")
@@ -48,12 +47,8 @@ public class BookRestController {
     }
 
     @PutMapping("/api/books/{id}")
-    @ResponseStatus(HttpStatus.OK)
     public BookUpdateDto updateBook(@PathVariable("id") long id,
                                            @Valid @RequestBody BookUpdateDto book) {
-        if (book.id() == id) {
             return bookService.update(book);
-        }
-        return null;
     }
 }
