@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+    </head>
+    <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
+    <script th:inline="javascript">
+
+        function commentsInit(bookId) {
+
+
+            if (bookId != null) {
+                fetch('/api/comments?bookId='+bookId).then((response) => response.json()).then((comments) => {
+                    const comments_body = document.getElementById("comments_body");
+                    if (comments_body != null) {
+                        comments_body.innerHTML = "";
+                        comments.forEach(function (comment) {
+                            comments_body.innerHTML += `
+                                <tr id="row_comment_${comment.id}">
+                                    <td>${comment.id}</td>
+                                    <td>${comment.text}</td>
+                                    <td>
+                                        <div><a class="refComment" onClick="commentDelete(${bookId}, ${comment.id}); return false" href="#">Delete</a></div>
+                                        <div><a class="refComment" onClick="commentCreateForm(${bookId}, ${comment.id}); deleteNode(this); return false" href="#">Edit</a></div>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    }
+                })
+             }
+        }
+
+        function deleteNode(node) {
+            
+            if (typeof node !== 'undefined' && node.parentNode) {
+                node.parentNode.removeChild(node)
+            }
+        }
+
+        function commentDelete(bookId, commentId) {
+             if (commentId != null && bookId != null) {
+                fetch('/api/comments/'+commentId, {method: 'DELETE'})
+                .then((response) => response.text())
+                .then((response) => {
+                    commentsInit(bookId)})
+             }
+        }
+
+        function commentCreateForm(bookId, commentId) {
+            let commentNode;
+            const newComment = (typeof commentId == 'undefined');
+            if (!newComment) {
+                commentNode = document.getElementById(`row_comment_${commentId}`).childNodes[3];
+            } else {
+                commentNode = document.getElementById('newComment');
+            }
+
+            const commentText = commentNode.innerText;
+            
+            
+            formComment=document.createElement('FORM');
+            formComment.name='formUpdate';
+            formComment.id=`formUpdate${commentId}`; 
+            formComment.method='POST';
+            formComment.action=`/api/comments/${commentId}`;
+            
+            if (!newComment) {
+                inputId=document.createElement('INPUT');
+                inputId.type='HIDDEN';
+                inputId.name='id';
+                inputId.value=commentId;
+                formComment.appendChild(inputId);
+            };
+
+            inputBookId=document.createElement('INPUT');
+            inputBookId.type='HIDDEN';
+            inputBookId.name='bookId';
+            inputBookId.value=bookId;
+            formComment.appendChild(inputBookId);
+
+            inputText=document.createElement('TEXTAREA');
+            inputText.name='text';
+            inputText.innerText=commentText;
+            formComment.appendChild(inputText);
+
+            inputSubmit=document.createElement('INPUT');
+            inputSubmit.type='BUTTON';
+            inputSubmit.name='submit';
+            inputSubmit.className='submitComment';
+            inputSubmit.value='Submit';
+            inputSubmit.addEventListener("click", () => {
+                commentApply(new FormData(formComment));
+                deleteNode(formComment);
+            } );
+            formComment.appendChild(inputSubmit);
+
+            inputSubmit=document.createElement('INPUT');
+            inputSubmit.type='BUTTON';
+            inputSubmit.name='cancel';
+            inputSubmit.className='cancelComment';
+            inputSubmit.value='Cancel';
+            if (newComment) {
+                inputSubmit.addEventListener("click", () => {
+                    deleteNode(formComment);
+                } );
+            } else {
+                inputSubmit.addEventListener("click", () => {
+                    commentsInit(bookId);
+                } );
+            }
+            formComment.appendChild(inputSubmit);
+
+            commentNode.innerHTML = '';
+            commentNode.appendChild(formComment);
+        }
+
+        function commentApply(data) {
+            
+            
+            if (typeof data !== 'undefined') {
+                const dataObj = Object.fromEntries(data.entries());
+                let metod = '';
+                let url = '';
+                
+                if (Object.hasOwn(dataObj, 'id')) {
+                    metod = 'PUT';
+                    url = '/api/comments/'+dataObj.id;
+                } else {
+                    metod = 'POST';
+                    url = '/api/comments';
+                }
+                const bookId = dataObj.bookId;
+                fetch(url, {
+                    method: metod , 
+                    body: JSON.stringify(dataObj),
+                    headers: {
+                    "Content-Type": "application/json"
+                    } 
+                })
+                .then((response) => response.json())
+                .then((response) => {
+                    commentsInit(bookId)})
+             }
+        }
+
+        function getGenres(selectedGenre) {
+            fetch(`/api/genres`).then((response) => response.json()).then((genres) => {
+                const genre_body = document.getElementById("genreId");
+                if (genre_body != null) {
+                    genre_body.innerHTML = "";
+                    genres.forEach(function (genre) {
+                        let selected = "";
+                        if (selectedGenre === genre.id) {
+                            selected = `selected="selected"`;
+                        }
+                        genre_body.innerHTML += `<option value="${genre.id}" ${selected}>${genre.name}</option>`;
+                    });
+                }
+            })
+        }
+
+        function getAuthors(selectedAuthor) {
+            fetch(`/api/authors`).then((response) => response.json()).then((authors) => {
+                const author_body = document.getElementById("authorId");
+                if (author_body != null) {
+                    author_body.innerHTML = "";
+                    authors.forEach(function (author) {
+                        let selected = "";
+                        if (selectedAuthor === author.id) {
+                            selected = `selected="selected"`;
+                        }
+                        author_body.innerHTML += `<option value="${author.id}" ${selected}>${author.name}</option>`;
+                    });
+                }
+            })
+        }
+
+
+        function bookInit(id) {
+            let selectedGenre = 0;
+            let selectedAuthor = 0;
+
+
+
+            if (id != null) {
+                fetch(`/api/books/${id}`).then((response) => response.json()).then((book) => {
+                    document.getElementById("id-input").value = book.id;
+                    document.getElementById("book-name-input").value= book.title;
+                    selectedGenre = book.genreId;
+                    selectedAuthor = book.authorId;
+                    document .title= book.title;
+
+                    getGenres(selectedGenre);
+                    getAuthors(selectedAuthor);
+                })
+            } else {
+                getGenres(selectedGenre);
+                getAuthors(selectedAuthor);
+            }
+        }
+
+        function bookDelete(bookId) {
+            if (bookId != null) {
+                fetch('/api/books/'+bookId, {method: 'DELETE'})
+                    .then((response) => response.text())
+                    .then((response) => {
+                        window.location.replace("/");
+                    })
+            }
+        }
+
+        function saveBook() {
+            let id = null;
+            if (document.getElementById("id-input") != null) {
+                id = document.getElementById("id-input").value;
+            }
+            const title = document.getElementById("book-name-input").value;
+            const authorId = document.getElementById("authorId").value;
+            const genreId = document.getElementById("authorId").value;
+
+
+
+            const book = {
+                id: id,
+                title: title,
+                authorId: authorId,
+                genreId: genreId
+            }
+            let url = "";
+            let method = "";
+            if (id != null) {
+                url = "/api/books/" + id;
+                method = "PUT"
+            } else {
+                url = "/api/books";
+                method = "POST"
+            }
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+                .then(rawResponse => rawResponse.json())
+                .then(json => {
+                    window.location.replace("/book/edit/" + json.id)
+                })
+        }
+
+
+        document.addEventListener('DOMContentLoaded', commentsInit(/*[[${id}]]*/ '0'), false);
+        document.addEventListener('DOMContentLoaded', bookInit(/*[[${id}]]*/ '0'), false);
+
+
+
+
+    </script>
+
+
+    <body>
+
+        <form id="edit-form" action="edit.html" th:action="${referer}" th:method="post">
+            <h2 th:unless="${referer == '/book/new'}">Edit book:</h2>
+            <h2 th:if="${referer == '/book/new'}">New book:</h2>
+
+            <div class="row" th:unless="${referer == '/book/new'}">
+                <label for="id-input">ID:</label>
+                <input id="id-input" type="text" readonly="readonly" name="id" value=""/>
+            </div>
+
+            <div class="row">
+                <label for="book-name-input">Title:</label>
+                <input id="book-name-input" name="title" type="text" value=""/>
+            </div>
+
+            <div class="row">
+                <label for="genreId">Genre:</label>
+                <select id="genreId" ></select>
+            </div>
+
+            <div class="row">
+                <label for="authorId">Author:</label>
+                <select id="authorId"></select>
+            </div>
+
+            <div class="row">
+                <button type="button" onclick="saveBook()">Save</button>
+                <a href="list.html" th:href="@{/}"><button type="button">Cancel</button></a>
+            </div>
+        </form>
+
+        <div class="row">
+            <form action="#" method="post" th:unless="${referer == '/book/new'}">
+                <button type="button" th:onclick="'bookDelete(\'' + ${id} + '\')'" class="btn-link">Delete</button>
+            </form>
+        </div>
+
+        <div >
+            <div id="comments" th:unless="${referer == '/book/new'}">
+            <h2>List of all comments</h2>
+            <a class="refComment" th:onclick="'commentCreateForm(\'' + ${id} + '\'); return false'" href="#">Create Comment</a>
+            <div id="newComment"></div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Comment</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="comments_body">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </body>
+</html>
