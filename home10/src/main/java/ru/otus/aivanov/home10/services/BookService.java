@@ -3,17 +3,17 @@ package ru.otus.aivanov.home10.services;
 import java.util.List;
 
 import ru.otus.aivanov.home10.dto.BookCreateDto;
-import ru.otus.aivanov.home10.dto.BookUpdateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
+import ru.otus.aivanov.home10.dto.BookFullDto;
 
 public interface BookService {
-    BookUpdateDto findById(long id);
+    BookDto findById(long id);
 
-    List<BookDto> findAll();
+    List<BookFullDto> findAll();
 
-    BookUpdateDto create(BookCreateDto book);
+    BookDto create(BookCreateDto book);
 
-    BookUpdateDto update(BookUpdateDto book);
+    BookDto update(BookDto book);
 
     void deleteById(long id);
 

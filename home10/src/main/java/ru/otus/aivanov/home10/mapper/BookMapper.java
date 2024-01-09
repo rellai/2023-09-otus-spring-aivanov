@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import ru.otus.aivanov.home10.dto.BookCreateDto;
-import ru.otus.aivanov.home10.dto.BookUpdateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
+import ru.otus.aivanov.home10.dto.BookFullDto;
 import ru.otus.aivanov.home10.models.Author;
 import ru.otus.aivanov.home10.models.Book;
 import ru.otus.aivanov.home10.models.Genre;
@@ -17,13 +17,13 @@ public interface BookMapper {
             @Mapping(target = "authorId", source = "book.author.id"),
             @Mapping(target = "genreId", source = "book.genre.id")
     })
-    BookUpdateDto toEditDto(Book book);
+    BookDto toEditDto(Book book);
 
     @Mappings({
             @Mapping(target = "author", source = "book.author.name"),
             @Mapping(target = "genre", source = "book.genre.name")
     })
-    BookDto toDto(Book book);
+    BookFullDto toDto(Book book);
 
     @Mapping(target = "author", source = "author")
     @Mapping(target = "genre", source = "genre")

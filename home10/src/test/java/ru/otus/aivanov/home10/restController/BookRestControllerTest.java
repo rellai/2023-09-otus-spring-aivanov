@@ -10,7 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.aivanov.home10.dto.BookCreateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
-import ru.otus.aivanov.home10.dto.BookUpdateDto;
+import ru.otus.aivanov.home10.dto.BookFullDto;
 import ru.otus.aivanov.home10.services.BookService;
 
 import java.util.List;
@@ -44,15 +44,15 @@ class BookRestControllerTest {
 
     @BeforeEach
     void setUp() {
-        given(bookService.create(any(BookCreateDto.class))).willReturn(new BookUpdateDto(1L, "Книга", 1L, 1L));
+        given(bookService.create(any(BookCreateDto.class))).willReturn(new BookDto(1L, "Книга", 1L, 1L));
     }
 
 
     @Test
     void listShouldRenderBooks() throws Exception {
         val books = List.of(
-                new BookDto(1L, "Book1", "Иван", "Horror"),
-                new BookDto(1L, "Book2", "Иван", "Horror")
+                new BookFullDto(1L, "Book1", "Иван", "Horror"),
+                new BookFullDto(1L, "Book2", "Иван", "Horror")
         );
         when(bookService.findAll()).thenReturn(books);
 
@@ -71,12 +71,12 @@ class BookRestControllerTest {
 
         this.mvc.perform(put("/api/books/1")
                 .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(new BookUpdateDto(1L, "Книга", 1L, 1L)))
+                .content(mapper.writeValueAsString(new BookDto(1L, "Книга", 1L, 1L)))
 
         ).andExpect(status().isOk());
 
 
-        verify(bookService).update(new BookUpdateDto(1L, "Книга", 1L, 1L));
+        verify(bookService).update(new BookDto(1L, "Книга", 1L, 1L));
     }
 
     @Test
@@ -101,7 +101,7 @@ class BookRestControllerTest {
 
     @Test
     void shouldRenderBook() throws Exception {
-        val book = new BookUpdateDto(1L, "Book1", 1L, 1L);
+        val book = new BookDto(1L, "Book1", 1L, 1L);
         when(bookService.findById(1L)).thenReturn(book);
 
         this.mvc.perform(get("/api/books/1"))

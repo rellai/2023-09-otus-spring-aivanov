@@ -3,7 +3,7 @@ package ru.otus.aivanov.home10.services;
 import lombok.RequiredArgsConstructor;
 import ru.otus.aivanov.home10.dto.BookCreateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
-import ru.otus.aivanov.home10.dto.BookUpdateDto;
+import ru.otus.aivanov.home10.dto.BookFullDto;
 import ru.otus.aivanov.home10.exceptions.NotFoundException;
 import ru.otus.aivanov.home10.mapper.BookMapper;
 import ru.otus.aivanov.home10.models.Book;
@@ -33,7 +33,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public BookUpdateDto findById(long id) {
+    public BookDto findById(long id) {
         return bookMapper.toEditDto(bookRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(id))
         ));
@@ -41,7 +41,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BookDto> findAll() {
+    public List<BookFullDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::toDto).collect(Collectors.toList());
     }
 
@@ -50,7 +50,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookUpdateDto create(BookCreateDto bookDto) {
+    public BookDto create(BookCreateDto bookDto) {
         var author = authorRepository.findById(bookDto.authorId())
                 .orElseThrow(() -> new NotFoundException("Author with id %d not found".formatted(bookDto.authorId())));
         var genre = genreRepository.findById(bookDto.genreId())
@@ -63,7 +63,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public BookUpdateDto update(BookUpdateDto bookDto) {
+    public BookDto update(BookDto bookDto) {
         Book book = bookRepository.findById(bookDto.id())
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(bookDto.id())));
 

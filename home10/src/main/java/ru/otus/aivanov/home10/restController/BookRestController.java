@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.aivanov.home10.dto.BookCreateDto;
 import ru.otus.aivanov.home10.dto.BookDto;
-import ru.otus.aivanov.home10.dto.BookUpdateDto;
+import ru.otus.aivanov.home10.dto.BookFullDto;
 import ru.otus.aivanov.home10.services.BookService;
 
 import java.util.List;
@@ -25,12 +25,12 @@ public class BookRestController {
     private final BookService bookService;
 
     @GetMapping("/api/books")
-    public List<BookDto> getAllBooks() {
+    public List<BookFullDto> getAllBooks() {
         return bookService.findAll();
     }
 
     @GetMapping("/api/books/{id}")
-    public BookUpdateDto getAllBooks(@PathVariable("id") long id) {
+    public BookDto getAllBooks(@PathVariable("id") long id) {
         return bookService.findById(id);
     }
 
@@ -42,13 +42,13 @@ public class BookRestController {
 
     @PostMapping("/api/books")
     @ResponseStatus(HttpStatus.CREATED)
-    public BookUpdateDto createBook(@Valid @RequestBody BookCreateDto book) {
+    public BookDto createBook(@Valid @RequestBody BookCreateDto book) {
         return bookService.create(book);
     }
 
     @PutMapping("/api/books/{id}")
-    public BookUpdateDto updateBook(@PathVariable("id") long id,
-                                           @Valid @RequestBody BookUpdateDto book) {
+    public BookDto updateBook(@PathVariable("id") long id,
+                              @Valid @RequestBody BookDto book) {
             return bookService.update(book);
     }
 }
