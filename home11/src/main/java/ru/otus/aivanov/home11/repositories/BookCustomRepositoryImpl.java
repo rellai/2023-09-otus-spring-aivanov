@@ -45,7 +45,6 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .first();
     }
 
-
     @Override
     public Mono<Book> save(String title, Long authorId, Long genreId) {
         String query =
@@ -59,7 +58,6 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         return client.sql(query)
                 .map(bookMapper::toModel)
                 .first();
-
     }
 
     @Override
@@ -78,7 +76,6 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
         return client.sql(query)
                 .map(bookMapper::toModel)
                 .first();
-
     }
 
 }
