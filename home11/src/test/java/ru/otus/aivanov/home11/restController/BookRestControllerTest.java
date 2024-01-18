@@ -18,7 +18,9 @@ import ru.otus.aivanov.home11.mapper.BookMapperImpl;
 import ru.otus.aivanov.home11.models.Author;
 import ru.otus.aivanov.home11.models.Book;
 import ru.otus.aivanov.home11.models.Genre;
+import ru.otus.aivanov.home11.repositories.AuthorRepository;
 import ru.otus.aivanov.home11.repositories.BookRepository;
+import ru.otus.aivanov.home11.repositories.GenreRepository;
 
 import java.util.List;
 
@@ -33,8 +35,16 @@ public class BookRestControllerTest {
     @MockBean
     private BookRepository bookRepository;
 
+    @MockBean
+    private GenreRepository genreRepository;
+
+    @MockBean
+    private AuthorRepository authorRepository;
+
+
     @SpyBean(BookMapperImpl.class)
     private BookMapper bookMapper;
+
 
     @Test
     void shouldReturnCorrectBooksList() throws Exception {
@@ -72,6 +82,14 @@ public class BookRestControllerTest {
 
         Mockito.when(bookRepository.save(title, 1L, 1L)).thenReturn(Mono.just(book));
 
+        Genre genre = new Genre(1L, "genre1");
+        Mockito.when(genreRepository.findById(1L)).thenReturn(Mono.just(genre));
+
+        Author author = new Author(1L, "AuthorName1");
+        Mockito.when(authorRepository.findById(1L)).thenReturn(Mono.just(author));
+
+
+
         webTestClient.post()
                 .uri("/api/books")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -84,11 +102,19 @@ public class BookRestControllerTest {
 
     @Test
     public void shouldEditBook() {
+
+        Genre genre = new Genre(1L, "genre1");
+        Mockito.when(genreRepository.findById(1L)).thenReturn(Mono.just(genre));
+
+        Author author = new Author(1L, "AuthorName1");
+        Mockito.when(authorRepository.findById(1L)).thenReturn(Mono.just(author));
+
         String title = "BookTitle1";
         Book book = new Book(1L, title, new Author(1L, "AuthorName1"),
                 new Genre(1L, "genre1"));
 
         Mockito.when(bookRepository.save(1L, title, 1L, 1L)).thenReturn(Mono.just(book));
+        Mockito.when(bookRepository.findById(1L)).thenReturn(Mono.just(book));
 
         webTestClient.put()
                 .uri("/api/books/{id}", 1L)

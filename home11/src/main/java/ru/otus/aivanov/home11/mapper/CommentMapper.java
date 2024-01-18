@@ -1,9 +1,8 @@
 package ru.otus.aivanov.home11.mapper;
 
+import io.r2dbc.spi.Readable;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-import ru.otus.aivanov.home11.dto.CommentCreateDto;
 import ru.otus.aivanov.home11.dto.CommentDto;
 import ru.otus.aivanov.home11.models.Book;
 import ru.otus.aivanov.home11.models.Comment;
@@ -13,8 +12,12 @@ public interface CommentMapper {
 
     CommentDto toDto(Comment comment);
 
-    @Mapping(target = "book", source = "book")
-    @Mapping(target = "id", ignore = true)
-    Comment toModel(CommentCreateDto comment, Book book);
+    default Comment toModel(Readable row) {
+        return new Comment (
+                row.get("id", Long.class),
+                row.get("text", String.class),
+                new Book(row.get("book_id", Long.class),row.get("book_title", String.class), null, null)
+        );
+    }
 
 }

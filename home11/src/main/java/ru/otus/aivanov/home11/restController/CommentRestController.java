@@ -7,7 +7,9 @@ import reactor.core.publisher.Mono;
 import ru.otus.aivanov.home11.dto.CommentCreateDto;
 import ru.otus.aivanov.home11.dto.CommentDto;
 import ru.otus.aivanov.home11.dto.CommentUpdateDto;
+import ru.otus.aivanov.home11.exceptions.NotFoundException;
 import ru.otus.aivanov.home11.mapper.CommentMapper;
+import ru.otus.aivanov.home11.repositories.BookRepository;
 import ru.otus.aivanov.home11.repositories.CommentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentRestController {
 
     private final CommentRepository commentRepository;
+
+    private final BookRepository bookRepository;
 
     private final CommentMapper commentMapper;
 
@@ -44,14 +48,24 @@ public class CommentRestController {
     @PostMapping("/api/comments")
     @ResponseStatus(HttpStatus.CREATED)
     public Mono<CommentDto> createComment(@Valid @RequestBody CommentCreateDto comment) {
-        return commentRepository.save(comment.text(), comment.bookId())
-                .map(comment2 -> commentMapper.toDto(comment2));
+
+        return bookRepository.findById(comment.bookId())
+                        .switchIfEmpty(Mono.error(new NotFoundException(
+                                "Comment with id %d not found".formatted(comment.bookId()))
+                        ))
+                        .flatMap(book -> {
+                              return commentRepository.save(comment.text(), book.getId())
+                                    .map(commentMapper::toDto);
+                        });
     }
 
     @PutMapping("/api/comments/{id}")
     public Mono<CommentDto> updateComment(@PathVariable("id") long id,
                                            @Valid @RequestBody CommentUpdateDto comment) {
-        return commentRepository.save(comment.id(), comment.text())
-                .map(commentMapper::toDto);
+          return commentRepository.findById(id)
+                  .switchIfEmpty(Mono.error(() ->
+                          new NotFoundException("Comment with id %d not found".formatted(id))))
+                  .flatMap(selectedComment -> commentRepository.save(selectedComment.getId(), comment.text())
+                       .map(commentMapper::toDto));
     }
 }

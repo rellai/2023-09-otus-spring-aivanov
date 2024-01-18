@@ -14,6 +14,9 @@ public interface CommentRepository  extends ReactiveCrudRepository<Comment, Long
     @Query("select id, text from comments where book_id = $1")
     Flux<Comment> findAllByBookId(Long bookId);
 
+    @Query("select id, text from comments where id = $1")
+    Mono<Comment> findById(Long id);
+
     @Query("SELECT id, text FROM FINAL TABLE (insert into comments (text, book_id) values ($1, $2))")
     Mono<Comment> save(String text, long bookId);
 
