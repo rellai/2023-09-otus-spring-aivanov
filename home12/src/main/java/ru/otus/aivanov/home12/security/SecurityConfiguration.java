@@ -19,12 +19,13 @@ public class SecurityConfiguration {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> request
-                        .anyRequest().authenticated()
+                        .anyRequest()
+                        .hasAuthority("ADMIN")
                 )
                 .formLogin(Customizer.withDefaults())
                 .logout(Customizer.withDefaults())
-                .anonymous(Customizer.withDefaults())
-                .rememberMe(Customizer.withDefaults());
+                .rememberMe(Customizer.withDefaults())
+        ;
         return http.build();
     }
 

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.test.context.support.WithMockUser;
 
 import org.springframework.test.web.servlet.MockMvc;
@@ -19,6 +20,7 @@ import ru.otus.aivanov.home12.dto.CommentUpdateDto;
 import ru.otus.aivanov.home12.mapper.CommentMapper;
 import ru.otus.aivanov.home12.mapper.CommentMapperImpl;
 
+import ru.otus.aivanov.home12.security.SecurityConfiguration;
 import ru.otus.aivanov.home12.services.CommentService;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,7 +32,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -40,6 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(CommentRestController.class)
+@Import(SecurityConfiguration.class)
 class CommentRestControllerTest {
 
     @Autowired
@@ -61,7 +63,7 @@ class CommentRestControllerTest {
 
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"admin"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void listShouldRenderComments() throws Exception {
         val comments = List.of(
                 new CommentDto(1L, "Comment1"),
@@ -77,10 +79,9 @@ class CommentRestControllerTest {
 
     
     @Test
-    @WithMockUser(username = "admin", authorities = {"admin"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"}, password = "admin")
     void editSaveShouldCallModifyMethodOfCommentService() throws Exception {
         this.mvc.perform(put("/api/comments/1")
-                .with(csrf())
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(new CommentUpdateDto(1L, "комментарий")))
 
@@ -90,10 +91,9 @@ class CommentRestControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"admin"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void createSaveShouldCallCreateMethodOfCommentService() throws Exception {
         this.mvc.perform(post("/api/comments")
-            .with(csrf())
             .contentType(APPLICATION_JSON)
             .content(mapper.writeValueAsString(new CommentCreateDto(1L, "Комментарий")))
         ).andExpect(status().isCreated());
@@ -102,10 +102,10 @@ class CommentRestControllerTest {
     }
 
     @Test
-    @WithMockUser(username = "admin", authorities = {"admin"})
+    @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void removeShouldCallRemoveMethodOfCommentService() throws Exception {
         this.mvc.perform(delete("/api/comments/1")
-                .with(csrf()))
+                )
                 .andExpect(status().isNoContent());
 
         verify(commentService).deleteById(1);
@@ -113,9 +113,8 @@ class CommentRestControllerTest {
 
     @Test
     void removeShouldReturnErrorNonAuthorizedUser() throws Exception {
-        this.mvc.perform(delete("/api/comments/1")
-                        .with(csrf()))
-                .andExpect(status().isUnauthorized());
+        this.mvc.perform(delete("/api/comments/1"))
+                .andExpect(status().isMovedTemporarily());
     }
 
 }
