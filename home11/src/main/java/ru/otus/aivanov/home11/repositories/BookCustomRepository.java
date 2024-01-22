@@ -10,7 +10,5 @@ public interface BookCustomRepository {
 
     Mono<Book> findByBookId(Long id);
 
-    Mono<Book> save(String title, Long authorId, Long genreId);
-
-    Mono<Book> save(Long id, String title, Long authorId, Long genreId);
+    Mono<Book> saveBook(Book book);
 }

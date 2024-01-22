@@ -24,6 +24,7 @@ import ru.otus.aivanov.home11.repositories.GenreRepository;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 
 @WebFluxTest(BookRestController.class)
@@ -77,10 +78,6 @@ public class BookRestControllerTest {
     @Test
     public void shouldCreateBook() {
         String title = "BookTitle1";
-        Book book = new Book(1L, title, new Author(1L, "AuthorName1"),
-                new Genre(1L, "genre1"));
-
-        Mockito.when(bookRepository.save(title, 1L, 1L)).thenReturn(Mono.just(book));
 
         Genre genre = new Genre(1L, "genre1");
         Mockito.when(genreRepository.findById(1L)).thenReturn(Mono.just(genre));
@@ -88,6 +85,8 @@ public class BookRestControllerTest {
         Author author = new Author(1L, "AuthorName1");
         Mockito.when(authorRepository.findById(1L)).thenReturn(Mono.just(author));
 
+        Book book = new Book(1L, title, author, genre);
+        Mockito.when(bookRepository.saveBook(any(Book.class))).thenReturn(Mono.just(book));
 
 
         webTestClient.post()
@@ -95,9 +94,7 @@ public class BookRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromObject(new BookCreateDto(title,  1L, 1L)))
                 .exchange()
-                .expectStatus().isCreated();
-
-        Mockito.verify(bookRepository, times(1)).save(title, 1L, 1L);
+                .expectStatus().isCreated().expectBody(BookDto.class).isEqualTo(bookMapper.toEditDto(book));
     }
 
     @Test
@@ -113,7 +110,7 @@ public class BookRestControllerTest {
         Book book = new Book(1L, title, new Author(1L, "AuthorName1"),
                 new Genre(1L, "genre1"));
 
-        Mockito.when(bookRepository.save(1L, title, 1L, 1L)).thenReturn(Mono.just(book));
+        Mockito.when(bookRepository.saveBook(book)).thenReturn(Mono.just(book));
         Mockito.when(bookRepository.findById(1L)).thenReturn(Mono.just(book));
 
         webTestClient.put()
@@ -123,6 +120,6 @@ public class BookRestControllerTest {
                 .exchange()
                 .expectStatus().isOk();
 
-        Mockito.verify(bookRepository, times(1)).save(1L, title, 1L, 1L);
+        Mockito.verify(bookRepository, times(1)).saveBook(book);
     }
 }

@@ -10,6 +10,7 @@ import ru.otus.aivanov.home11.dto.BookDto;
 import ru.otus.aivanov.home11.dto.BookFullDto;
 import ru.otus.aivanov.home11.exceptions.NotFoundException;
 import ru.otus.aivanov.home11.mapper.BookMapper;
+import ru.otus.aivanov.home11.models.Book;
 import ru.otus.aivanov.home11.repositories.AuthorRepository;
 import ru.otus.aivanov.home11.repositories.BookRepository;
 
@@ -70,7 +71,7 @@ public class BookRestController {
                                 "Author with id %d not found".formatted(bookDto.authorId()))
                         )))
                 .flatMap(tuple -> {
-                      return bookRepository.save(bookDto.title(), tuple.getT1().getId(), tuple.getT2().getId())
+                      return bookRepository.saveBook(new Book(bookDto.title(), tuple.getT2(), tuple.getT1()))
                             .map(bookMapper::toEditDto);
                 });
     }
@@ -92,9 +93,10 @@ public class BookRestController {
                                 "Book with id %d not found".formatted(bookDto.id()))
                         ))
                         .flatMap(book -> {
-                            var genre = tuple.getT1();
-                            var author = tuple.getT2();
-                            return bookRepository.save(book.getId(), bookDto.title(), author.getId(), genre.getId())
+                            book.setGenre(tuple.getT1());
+                            book.setTitle(bookDto.title());
+                            book.setAuthor(tuple.getT2());
+                            return bookRepository.saveBook(book)
                                     .map(bookMapper::toEditDto);
                         }));
 

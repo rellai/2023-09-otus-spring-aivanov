@@ -54,7 +54,7 @@ public class CommentRestController {
                                 "Comment with id %d not found".formatted(comment.bookId()))
                         ))
                         .flatMap(book -> {
-                              return commentRepository.save(comment.text(), book.getId())
+                              return commentRepository.save(commentMapper.toModel(comment))
                                     .map(commentMapper::toDto);
                         });
     }
@@ -65,7 +65,9 @@ public class CommentRestController {
           return commentRepository.findById(id)
                   .switchIfEmpty(Mono.error(() ->
                           new NotFoundException("Comment with id %d not found".formatted(id))))
-                  .flatMap(selectedComment -> commentRepository.save(selectedComment.getId(), comment.text())
+                  .flatMap(selectedComment -> commentRepository.save(
+                          commentMapper.toModel(comment)
+                          )
                        .map(commentMapper::toDto));
     }
 }

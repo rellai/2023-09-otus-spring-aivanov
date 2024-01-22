@@ -33,5 +33,11 @@ public class Book {
         this.genre = genre;
     }
 
+    public Book(String title, Author author, Genre genre) {
+        this.title = title;
+        this.author = author;
+        this.genre = genre;
+    }
+
 
 }

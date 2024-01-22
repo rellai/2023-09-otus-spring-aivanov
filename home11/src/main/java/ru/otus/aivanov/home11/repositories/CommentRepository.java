@@ -1,6 +1,7 @@
 package ru.otus.aivanov.home11.repositories;
 
 import org.springframework.data.r2dbc.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -17,11 +18,19 @@ public interface CommentRepository  extends ReactiveCrudRepository<Comment, Long
     @Query("select id, text from comments where id = $1")
     Mono<Comment> findById(Long id);
 
-    @Query("SELECT id, text FROM FINAL TABLE (insert into comments (text, book_id) values ($1, $2))")
-    Mono<Comment> save(String text, long bookId);
+    @Query("SELECT id, text FROM FINAL TABLE (" +
+            "Merge into comments as c using " +
+            "(select " +
+            "COALESCE(:#{#comment.id}, 0) as id,  " +
+            "COALESCE(:#{#comment.text}, '') as text, " +
+            "COALESCE(:#{#comment.book.id}, 0) as book_id) uc on c.id = uc.id \n" +
+            "    when matched then update set text = uc.text\n" +
+            "    when not matched then insert(text, book_id) values (uc.text, uc.book_id))")
+    Mono<Comment> save(@Param("comment")  Comment comment);
 
-    @Query("SELECT id, text FROM FINAL TABLE (update comments set text = $2 where id = $1)")
-    Mono<Comment> save(long id, String text);
+
+
+
 
 }
 

@@ -45,34 +45,29 @@ public class BookCustomRepositoryImpl implements BookCustomRepository {
                 .first();
     }
 
-    @Override
-    public Mono<Book> save(String title, Long authorId, Long genreId) {
-        String query =
-                " select b.id, b.title, " +
-                        "a.id author_id, g.id genre_id" +
-                        ", a.name author_name, g.name genre_name " +
-                        " from FINAL TABLE (insert into books (title, author_id, genre_id) " +
-                        " VALUES ('" + title + "', " + authorId.toString() + ", " + genreId.toString() + ")) b " +
-                        " left join authors a on a.id = b.author_id " +
-                        " left join genres g on g.id = b.genre_id ";
-        return client.sql(query)
-                .map(bookMapper::toModel)
-                .first();
-    }
 
     @Override
-    public Mono<Book> save(Long id, String title, Long authorId, Long genreId) {
+    public Mono<Book> saveBook(Book book) {
         String query =
-                " select b.id, b.title, " +
-                        "a.id author_id, g.id genre_id" +
-                        ", a.name author_name, g.name genre_name" +
-                        " FROM FINAL TABLE( update books set " +
-                                "  title = '" + title + "', " +
-                                " author_id = " + authorId.toString() + ", " +
-                                " genre_id = " + genreId.toString() +
-                        " where id = " + id.toString() + ") b" +
-                        " left join authors a on a.id = b.author_id " +
-                        " left join genres g on g.id = b.genre_id ";
+                (" select b.id, b.title, a.id author_id, g.id genre_id, a.name author_name, g.name genre_name " +
+                        "FROM FINAL TABLE( " +
+                        "Merge into books as b using " +
+                        "(select " +
+                        "COALESCE(%d, 0) as id,  " +
+                        "COALESCE('%s', '') as title, " +
+                        "COALESCE(%d, 0) as genre_id, " +
+                        "COALESCE(%d, 0) as author_id ) ub on b.id = ub.id " +
+                        "when matched then update " +
+                        "set title = ub.title, genre_id = ub.genre_id, author_id = ub.author_id " +
+                        "when not matched then insert(title, genre_id, author_id) " +
+                        "values (ub.title, ub.genre_id, ub.author_id)" +
+                        ") b " +
+                        "left join authors a on a.id = b.author_id  " +
+                        "left join genres g on g.id = b.genre_id ").formatted(
+                        book.getId(),
+                        book.getTitle(),
+                        book.getGenre().getId(),
+                        book.getAuthor().getId());
         return client.sql(query)
                 .map(bookMapper::toModel)
                 .first();
