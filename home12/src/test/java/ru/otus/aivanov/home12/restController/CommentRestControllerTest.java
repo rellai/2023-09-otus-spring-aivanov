@@ -32,7 +32,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -72,9 +71,7 @@ class CommentRestControllerTest {
         );
         when(commentService.findAllByBook(any(Long.class))).thenReturn(comments);
 
-        this.mvc.perform(get("/api/comments").
-                        param("bookId", "1").
-                        with(csrf()))
+        this.mvc.perform(get("/api/comments").param("bookId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Comment1")))
                 .andExpect(content().string(containsString("Comment2")));
@@ -85,7 +82,6 @@ class CommentRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"}, password = "admin")
     void editSaveShouldCallModifyMethodOfCommentService() throws Exception {
         this.mvc.perform(put("/api/comments/1")
-                .with(csrf())
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(new CommentUpdateDto(1L, "комментарий")))
 
@@ -98,9 +94,8 @@ class CommentRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void createSaveShouldCallCreateMethodOfCommentService() throws Exception {
         this.mvc.perform(post("/api/comments")
-                .with(csrf())
-                .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(new CommentCreateDto(1L, "Комментарий")))
+            .contentType(APPLICATION_JSON)
+            .content(mapper.writeValueAsString(new CommentCreateDto(1L, "Комментарий")))
         ).andExpect(status().isCreated());
 
         verify(commentService).create(new CommentCreateDto(1L, "Комментарий"));
@@ -110,7 +105,6 @@ class CommentRestControllerTest {
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void removeShouldCallRemoveMethodOfCommentService() throws Exception {
         this.mvc.perform(delete("/api/comments/1")
-                        .with(csrf())
                 )
                 .andExpect(status().isNoContent());
 
@@ -119,7 +113,7 @@ class CommentRestControllerTest {
 
     @Test
     void removeShouldReturnErrorNonAuthorizedUser() throws Exception {
-        this.mvc.perform(delete("/api/comments/1").with(csrf()))
+        this.mvc.perform(delete("/api/comments/1"))
                 .andExpect(status().isUnauthorized());
     }
 

@@ -24,7 +24,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -74,7 +73,6 @@ class BookRestControllerTest {
     void editSaveShouldCallModifyMethodOfBookService() throws Exception {
 
         this.mvc.perform(put("/api/books/1")
-                .with(csrf())
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(new BookDto(1L, "Книга", 1L, 1L)))
 
@@ -90,7 +88,6 @@ class BookRestControllerTest {
     void createSaveShouldCallCreateMethodOfBookService() throws Exception {
 
         this.mvc.perform(post("/api/books")
-                .with(csrf())
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(new BookCreateDto("Книга",  1L, 1L)))
         ).andExpect(status().isCreated());
@@ -102,8 +99,7 @@ class BookRestControllerTest {
     @Test
     @WithMockUser(username = "admin", authorities = {"ADMIN"})
     void removeShouldCallRemoveMethodOfBookService() throws Exception {
-        this.mvc.perform(delete("/api/books/1")
-                        .with(csrf()))
+        this.mvc.perform(delete("/api/books/1"))
                 .andExpect(status().isNoContent());
 
         verify(bookService).deleteById(1);
@@ -115,8 +111,7 @@ class BookRestControllerTest {
         val book = new BookDto(1L, "Book1", 1L, 1L);
         when(bookService.findById(1L)).thenReturn(book);
 
-        this.mvc.perform(get("/api/books/1")
-                        .with(csrf()))
+        this.mvc.perform(get("/api/books/1"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Book1")));
     }
@@ -126,8 +121,7 @@ class BookRestControllerTest {
         val book = new BookDto(1L, "Book1", 1L, 1L);
         when(bookService.findById(1L)).thenReturn(book);
 
-        this.mvc.perform(get("/api/books/1")
-                        .with(csrf()))
+        this.mvc.perform(get("/api/books/1"))
                 .andExpect(status().isUnauthorized());
     }
 
