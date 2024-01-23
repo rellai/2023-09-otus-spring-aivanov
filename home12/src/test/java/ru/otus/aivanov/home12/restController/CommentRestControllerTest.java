@@ -114,7 +114,7 @@ class CommentRestControllerTest {
     @Test
     void removeShouldReturnErrorNonAuthorizedUser() throws Exception {
         this.mvc.perform(delete("/api/comments/1"))
-                .andExpect(status().isMovedTemporarily());
+                .andExpect(status().isUnauthorized());
     }
 
 }

@@ -122,7 +122,7 @@ class BookRestControllerTest {
         when(bookService.findById(1L)).thenReturn(book);
 
         this.mvc.perform(get("/api/books/1"))
-                .andExpect(status().isMovedTemporarily());
+                .andExpect(status().isUnauthorized());
     }
 
 

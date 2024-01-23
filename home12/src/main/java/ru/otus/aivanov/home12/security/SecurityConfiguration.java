@@ -2,6 +2,7 @@ package ru.otus.aivanov.home12.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,7 +16,22 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain firstSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                .securityMatcher("/api/**")
+                .authorizeHttpRequests((request) -> request
+                        .anyRequest()
+                        .hasAuthority("ADMIN")
+                )
+                .httpBasic(Customizer.withDefaults());
+        return http.build();
+    }
+
+    @Bean
+    @Order(2)
+    public SecurityFilterChain secondSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> request
@@ -24,8 +40,7 @@ public class SecurityConfiguration {
                 )
                 .formLogin(Customizer.withDefaults())
                 .logout(Customizer.withDefaults())
-                .rememberMe(Customizer.withDefaults())
-        ;
+                .rememberMe(Customizer.withDefaults());
         return http.build();
     }
 
