@@ -6,7 +6,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -19,7 +18,6 @@ public class SecurityConfiguration {
     @Order(1)
     public SecurityFilterChain firstSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests((request) -> request
                         .anyRequest()
@@ -33,7 +31,6 @@ public class SecurityConfiguration {
     @Order(2)
     public SecurityFilterChain secondSecurityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> request
                         .anyRequest()
                         .hasAuthority("ADMIN")
