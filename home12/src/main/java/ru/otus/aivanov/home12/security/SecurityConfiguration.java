@@ -28,7 +28,6 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    @Order(2)
     public SecurityFilterChain secondSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((request) -> request
