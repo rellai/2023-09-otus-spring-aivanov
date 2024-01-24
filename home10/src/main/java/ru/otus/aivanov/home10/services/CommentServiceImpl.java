@@ -63,7 +63,6 @@ public class CommentServiceImpl implements CommentService {
         Book book = bookRepository.findById(commentDto.bookId())
                 .orElseThrow(() -> new NotFoundException("Book with id %d not found".formatted(commentDto.bookId()))
         );
-        Comment comment = commentMapper.toModel(commentDto,book) ;
         return commentMapper.toDto(commentRepository.save(commentMapper.toModel(commentDto,book)));
 
     }
