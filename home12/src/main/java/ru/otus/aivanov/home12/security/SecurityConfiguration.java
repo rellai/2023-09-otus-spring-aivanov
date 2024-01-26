@@ -23,7 +23,7 @@ public class SecurityConfiguration {
                 .securityMatcher("/api/**")
                 .authorizeHttpRequests((request) -> request
                         .anyRequest()
-                        .hasAuthority("ADMIN")
+                        .authenticated()
                 )
                 .httpBasic(Customizer.withDefaults());
         return http.build();
@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((request) -> request
                         .anyRequest()
-                        .hasAuthority("ADMIN")
+                        .authenticated()
                 )
                 .formLogin(Customizer.withDefaults())
                 .logout(Customizer.withDefaults())
