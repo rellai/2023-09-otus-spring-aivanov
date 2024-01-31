@@ -9,8 +9,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.aivanov.home13.security.SecurityConfiguration;
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 @WebMvcTest(BookController.class)
@@ -28,6 +27,13 @@ class BookControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("List of all books")));
 
+    }
+
+    @Test
+    void shouldRedirectToLogin() throws Exception {
+        this.mvc.perform(get("/"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrlPattern("**/login"));
     }
 
     @Test
