@@ -21,7 +21,8 @@
         <module>home08</module>
         <module>home09</module>
         <module>home10</module>
-        <module>home12</module>
         <module>home11</module>
+        <module>home12</module>
+        <module>home13</module>
     </modules>
 </project>
