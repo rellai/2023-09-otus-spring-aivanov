@@ -1,0 +1,53 @@
+spring:
+  data:
+    mongodb:
+      port: 0
+      database: test
+
+  shell:
+    interactive:
+      enabled: false
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  sql:
+    init:
+      mode: always
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: false
+    show-sql: true
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.4.16
+
+mongock:
+  runner-type: "ApplicationRunner" # default
+  #runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.aivanov.home08.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
