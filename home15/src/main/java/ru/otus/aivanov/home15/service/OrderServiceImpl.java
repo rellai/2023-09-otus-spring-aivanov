@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.otus.aivanov.home15.model.Email;
 import ru.otus.aivanov.home15.model.Order;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -12,8 +13,17 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     public Order createOrder(Email email) {
-        log.info("CreateOrder: {}", email);
-        return new Order("1", email.getFrom(), List.of("burrito","taco"));
+        log.info("CreateOrder - email: {}", email);
+
+        Order order = new Order(
+                Long.toString(System.currentTimeMillis()),
+                email.getFrom(),
+                Arrays.asList(email.getMessage().split("\\s*,\\s*"))
+        );
+
+        log.info("CreateOrder - order: {}", order);
+
+        return order;
 
     }
 
