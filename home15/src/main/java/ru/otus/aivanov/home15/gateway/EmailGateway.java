@@ -10,5 +10,5 @@ import java.util.List;
 public interface EmailGateway {
 
     @Gateway(replyChannel = "queueChannel")
-    List<Email> process(List<Email> emails);
+    List<Email> process(List<String> rawEmails);
 }
