@@ -69,14 +69,6 @@ public class IntegrationConfig {
                 .get();
     }
 
-    @Bean
-    public IntegrationFlow infoFlow() {
-        return IntegrationFlow.from(infoEmailChannel())
-                .handle(msg -> {
-                    log.info("Information Message {}", msg.getPayload());
-                })
-                .get();
-    }
 
     @Bean
     public IntegrationFlow emailsFlow(EmailService emailService, OrderService orderService) {
@@ -85,9 +77,16 @@ public class IntegrationConfig {
                 .channel("emailChannel")
                 .<Email>filter((p) -> p.getTitle().equalsIgnoreCase("order") || p.getTitle().equalsIgnoreCase("info"))
                 .route(Email.class,
-                        p -> p.getTitle().equalsIgnoreCase("order")  ? "orderEmailChannel" : "infoEmailChannel")
-                .get();
+                        p -> p.getTitle().equalsIgnoreCase("order")  ? "orderEmailChannel" : "infoEmailChannel",
+                        mapping ->
+                                mapping.subFlowMapping("infoEmailChannel",
+                                        f -> f.handle(msg -> {
+                                                    log.info("Information Message {}", msg.getPayload());
+                                                })
 
+                                )
+                )
+                .get();
     }
 
 }
