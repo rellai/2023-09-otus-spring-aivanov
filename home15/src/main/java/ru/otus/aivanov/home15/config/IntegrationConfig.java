@@ -62,7 +62,7 @@ public class IntegrationConfig {
     }
 
     @Bean
-    public IntegrationFlow ordersFlow(EmailService emailService, OrderService orderService) {
+    public IntegrationFlow ordersFlow(OrderService orderService) {
         return IntegrationFlow.from(orderEmailChannel())
                 .handle(orderService, "createOrder")
                 .channel("orderChannel")
