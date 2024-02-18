@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of all books</title>
+</head>
+<script th:inline="javascript">
+
+    function booksInit() {
+        fetch('/api/books').then((response) => response.json()).then((books) => {
+            const books_body = document.getElementById("books_body");
+            if (books_body != null) {
+                books_body.innerHTML = "";
+                books.forEach(function (book) {
+                    books_body.innerHTML += `
+                            <tr id="row_book_${book.id}">
+                                <td>${book.id}</td>
+                                <td>${book.title}</td>
+                                <td>${book.genre}</td>
+                                <td>${book.author}</td>
+                                <td class="action">
+                                    <a href="/book/edit/${book.id}">Edit</a>
+                                </td>
+                            </tr>
+                        `;
+                });
+            }
+        })
+    }
+
+    document.addEventListener('DOMContentLoaded', booksInit(), false);
+
+</script>
+<body>
+<link rel="stylesheet" href="../style.css" type="text/css" media="all" />
+<h2>List of all books</h2>
+<a href="/book/new">New Book</a>
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Genre</th>
+        <th>Author</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody id="books_body">
+
+    </tbody>
+</table>
+
+</body>
+</html>
