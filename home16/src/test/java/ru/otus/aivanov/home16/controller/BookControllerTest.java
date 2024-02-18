@@ -1,4 +1,4 @@
-package ru.otus.aivanov.home13.controller;
+package ru.otus.aivanov.home16.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package ru.otus.aivanov.home13.restController;
+package ru.otus.aivanov.home16.restController;
 
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;

@@ -1,9 +1,9 @@
-package ru.otus.aivanov.home13.restController;
+package ru.otus.aivanov.home16.restController;
 
 import lombok.val;
-import ru.otus.aivanov.home16.dto.GenreDto;
-import ru.otus.aivanov.home16.restController.GenreRestController;
-import ru.otus.aivanov.home16.services.GenreService;
+import ru.otus.aivanov.home16.dto.AuthorDto;
+import ru.otus.aivanov.home16.restController.AuthorRestController;
+import ru.otus.aivanov.home16.services.AuthorService;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
-
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,29 +20,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest(GenreRestController.class)
-class GenreRestControllerTest {
+@WebMvcTest(AuthorRestController.class)
+class AuthorRestControllerTest {
 
     @Autowired
     private MockMvc mvc;
 
     @MockBean
-    private GenreService genreService;
+    private AuthorService authorService;
 
     @WithMockUser(username = "admin", authorities = {"ROLE_ADMIN"})
     @Test
-    void listShouldRenderGenres() throws Exception {
-        val genres = List.of(
-                new GenreDto(1L, "Skazka"),
-                new GenreDto(1L, "Detectiv")
+    void listShouldRenderAuthors() throws Exception {
+        val authors = List.of(
+                new AuthorDto(1L, "Pushkin"),
+                new AuthorDto(1L, "Lermontov")
         );
-        when(genreService.findAll()).thenReturn(genres);
+        when(authorService.findAll()).thenReturn(authors);
 
 
-        this.mvc.perform(get("/api/genres"))
+        this.mvc.perform(get("/api/authors"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Skazka")))
-                .andExpect(content().string(containsString("Detectiv")));
+                .andExpect(content().string(containsString("Pushkin")))
+                .andExpect(content().string(containsString("Lermontov")));
 
 
 
