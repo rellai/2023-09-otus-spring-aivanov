@@ -1,6 +1,5 @@
 package ru.otus.aivanov.home16.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -18,7 +17,6 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "genres")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Genre {
 
     @Id

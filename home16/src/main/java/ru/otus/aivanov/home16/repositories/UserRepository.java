@@ -9,7 +9,9 @@ import java.util.Optional;
 
 @RepositoryRestResource(path = "users")
 public interface UserRepository extends CrudRepository<User, Long> {
+
     Optional<User> findByUsername(String username);
 
+    @Override
     List<User> findAll();
 }

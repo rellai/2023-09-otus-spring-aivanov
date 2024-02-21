@@ -13,9 +13,11 @@ import ru.otus.aivanov.home16.projection.BookProjection;
 @RepositoryRestResource(path = "books", excerptProjection = BookProjection.class)
 public interface BookRepository  extends CrudRepository<Book, Long> {
 
+    @Override
     @EntityGraph(value = "book-author-genre-entity-graph")
-    Optional<Book> findById(long id);
+    Optional<Book> findById(Long id);
 
+    @Override
     @EntityGraph(value = "book-author-genre-entity-graph")
     List<Book> findAll();
 

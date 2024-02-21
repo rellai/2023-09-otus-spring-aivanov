@@ -17,5 +17,4 @@ public interface BookService {
 
     void deleteById(long id);
 
-    long count();    
 }
