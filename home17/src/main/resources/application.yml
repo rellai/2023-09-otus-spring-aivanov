@@ -1,0 +1,25 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+    include-message: always
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/db
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+  jpa:
+    database: POSTGRESQL
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true

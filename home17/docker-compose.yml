@@ -1,0 +1,35 @@
+version: '3'
+services:
+  db:
+    hostname: pgdb
+    container_name: pgdb
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    ports:
+      - "54320:5432"
+  app:
+    hostname: app
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb:5432/db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy
