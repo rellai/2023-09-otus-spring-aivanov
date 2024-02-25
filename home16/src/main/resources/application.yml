@@ -1,0 +1,57 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+    include-message: always
+spring:
+
+  datasource:
+    url: jdbc:h2:mem:maindb
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:data.sql
+      schema-locations: classpath:schema.sql
+
+  h2:
+    console:
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+  data:
+    rest:
+      basePath: /hateoas
+  jmx:
+    enabled: true
+management:
+  endpoints:
+    web:
+      base-path: /monitor
+      exposure:
+        include: beans,health,info,metrics,prometheus,logfile,threaddump,heapdump,loggers,env,env-details,env-health
+  endpoint:
+    health:
+      # display health checks with details
+      show-details: when-authorized
+    logfile:
+      external-file: ${logging.file.name}
+  # enable all default health check
+  health:
+    defaults:
+      enabled: true
+logging:
+  file:
+    name: ./logs/library-log.log
+  level:
+    root: INFO
+    org:
+      hibernate:
+        SQL: DEBUG

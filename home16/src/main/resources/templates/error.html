@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <h1>Something went wrong! </h1>
+    </head>
+    <link rel="stylesheet" href="/style.css" type="text/css" media="all" />
+    <body>
+
+    <h1>ERROR</h1>
+    <p th:text="'Error message: ' + ${error}">Error Info</p>
+    <p th:text="'Error code: ' + ${status}">Status</p>
+    <a href="/">Go Home</a>
+
+
+    </body>
+</html>
