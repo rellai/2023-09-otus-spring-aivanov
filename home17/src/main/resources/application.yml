@@ -5,7 +5,7 @@ server:
     include-message: always
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/db
+    url: jdbc:postgresql://localhost:54320/db
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver

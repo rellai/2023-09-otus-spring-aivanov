@@ -1,8 +1,8 @@
 version: '3'
 services:
-  db:
-    hostname: pgdb
-    container_name: pgdb
+  library-db:
+    hostname: library-db
+    container_name: library-db
     build:
       context: .
       dockerfile: Dockerfile.postgres
@@ -18,18 +18,19 @@ services:
     restart: unless-stopped
     ports:
       - "54320:5432"
-  app:
-    hostname: app
-    container_name: app
+
+  library-service:
+    hostname: library-service
+    container_name: library-service
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://pgdb:5432/db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://library-db:5432/db
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
     depends_on:
-      db:
+      library-db:
         condition: service_healthy
