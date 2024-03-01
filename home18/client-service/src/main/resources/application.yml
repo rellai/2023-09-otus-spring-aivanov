@@ -41,3 +41,17 @@ management:
   health:
     defaults:
       enabled: true
+
+#https://habr.com/ru/articles/544074/
+#https://www.baeldung.com/spring-boot-resilience4j
+resilience4j:
+  circuitbreaker:
+    instances:
+      circuitBreakerService:
+        failure-rate-threshold: 50
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 5s
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 5
+        sliding-window-type: count_based
+        slow-call-duration-threshold: 10s
