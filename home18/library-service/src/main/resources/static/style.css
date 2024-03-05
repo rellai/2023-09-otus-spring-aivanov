@@ -1,0 +1,83 @@
+body {
+    font-family: arial, serif;
+    background-color: #fdfdea;
+}
+
+table {
+    border: 1px solid steelblue;
+    width: 500px;
+    border-collapse: collapse;
+}
+
+table tr td, th {
+    padding: 5px 10px;
+    border: 1px solid #d5a64d;
+}
+
+table td:last-child, td:first-child {
+    width: 100px;
+}
+td.action {
+    text-align: center;
+}
+
+a {
+    color: #916003;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+label {
+    display: inline-block;
+    width: 100px;
+}
+
+input:read-only {
+    background: lightgray;
+}
+
+.row {
+    margin-top: 10px;
+}
+
+input, select, textarea {
+border: 1px solid silver;
+border-radius: 4px;
+padding: 4px;
+}
+
+textarea {
+    width : 98%;
+    height: 50px;
+}
+
+input:active, input:hover, input:focus, select:active, select:hover, select:focus {
+    border: 1px solid #818181;;
+    outline: none;
+}
+
+button, input[type=button] {
+    border-radius: 3px;
+    border: 1px solid #fdb939;
+    padding: 4px 12px;
+    background-color: wheat;
+    cursor: pointer;
+}
+
+button:hover, input[type=button]:hover{
+    background-color: #ffd78d;
+}
+
+.submitComment, .cancelComment {
+    margin: 1px;
+}
+
+#newComment {
+    padding: 5px;
+    width: 350px;
+}
+
+

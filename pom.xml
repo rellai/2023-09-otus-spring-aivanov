@@ -4,6 +4,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.1.5</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
     <groupId>ru.otus.aivanov</groupId>
     <artifactId>homeworks</artifactId>
     <version>1.0</version>
@@ -28,5 +35,6 @@
         <module>home15</module>
         <module>home16</module>
         <module>home17</module>
+        <module>home18</module>
     </modules>
 </project>

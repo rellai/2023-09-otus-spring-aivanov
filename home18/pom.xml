@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.otus.aivanov</groupId>
+        <artifactId>homeworks</artifactId>
+        <version>1.0</version>
+    </parent>
+
+    <properties>
+        <spring-cloud.version>2022.0.5</spring-cloud.version>
+        <spring-cloud-starter-netflix.version>2.2.10.RELEASE</spring-cloud-starter-netflix.version>
+    </properties>
+
+    <artifactId>home18</artifactId>
+    <packaging>pom</packaging>
+    <name>home18</name>
+    <modules>
+        <module>eureka-server</module>
+        <module>library-service</module>
+        <module>client-service</module>
+    </modules>
+
+</project>
